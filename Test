@@ -81,31 +81,60 @@ do
 
     local ToggleMobHit = Tabs.Main:AddToggle("Toggle Mob Hit", { Title = "Toggle Mob Hit", Default = false })
 
-    ToggleMobHit:OnChanged(function(Loop)
-        _G.enabled = Loop
-        while _G.enabled == true do 
-            task.wait(.25) do
-                game:GetService("ReplicatedStorage").Remotes.UseItem:FireServer(unpack(args))
+ToggleMobHit:OnChanged(function(Loop)
+    _G.enabled = Loop
+    while _G.enabled do
+        task.wait(0.25)
+
+        -- Ensure args is defined and is a table
+        if not args or type(args) ~= "table" then
+            args = {}  -- Default to an empty table if args is invalid
+        end
+
+        -- Fire the remote only if it's a valid table
+        if game:GetService("ReplicatedStorage"):FindFirstChild("Remotes") then
+            local remotes = game:GetService("ReplicatedStorage").Remotes
+            if remotes:FindFirstChild("UseItem") then
+                remotes.UseItem:FireServer(unpack(args))  -- Fire remote with unpacked args
             end
         end
-    end)
+    end
+end)
 
-    local ToggleMobKill = Tabs.Main:AddToggle("Toggle Mob Kill", { Title = "Toggle Mob Kill", Default = false })
+local ToggleMobKill = Tabs.Main:AddToggle("Toggle Mob Kill", { Title = "Toggle Mob Kill", Default = false })
 
-    ToggleMobKill:OnChanged(function(Loop)
-        local a = game.Players.LocalPlayer.Character:FindFirstChildOfClass("Tool")
-        _G.on = Loop
-        while _G.on == true do 
-            task.wait(.8)
-            for _,v in pairs(game.Workspace.Enemies:GetChildren()) do
-                if string.find(v.Name, mob) then
-                    game:GetService("ReplicatedStorage").Remotes.UseItem:FireServer(unpack(args))
-                    firetouchinterest(a.Handle, v:FindFirstChildOfClass("Part"), 0)
-                    firetouchinterest(a.Handle, v:FindFirstChildOfClass("Part"), 1)
+ToggleMobKill:OnChanged(function(Loop)
+    _G.on = Loop
+    while _G.on do
+        task.wait(0.8)
+
+        local player = game.Players.LocalPlayer
+        local tool = player.Character and player.Character:FindFirstChildOfClass("Tool")
+        if not tool then continue end  -- Skip iteration if no tool is found
+
+        for _, enemy in pairs(game.Workspace.Enemies:GetChildren()) do
+            if string.find(enemy.Name, mob) then
+                -- Ensure args is defined and is a table
+                if not args or type(args) ~= "table" then
+                    args = {}  -- Default to an empty table if args is invalid
+                end
+
+                -- Fire the remote only if it's a valid table
+                local remotes = game:GetService("ReplicatedStorage").Remotes
+                if remotes:FindFirstChild("UseItem") then
+                    remotes.UseItem:FireServer(unpack(args))  -- Fire remote with unpacked args
+                end
+
+                local part = enemy:FindFirstChildOfClass("Part")
+                if part then
+                    -- Simulate touching the enemy
+                    firetouchinterest(tool.Handle, part, 0)
+                    firetouchinterest(tool.Handle, part, 1)
                 end
             end
         end
-    end)
+    end
+end)
 
     local ToggleGold = Tabs.Main:AddToggle("500k Gold", { Title = "500k Gold", Default = false })
 
