@@ -46,7 +46,7 @@ local MobName = Tabs.Main:AddInput("Mob Name", {
 
 local ToggleMob = Tabs.Main:AddToggle("Toggle Mob", {Title = "Toggle Mob", Default = false })
 
-Toggle:OnChanged(function(Loop)
+ToggleMob:OnChanged(function(Loop)
 local a = game.Players.LocalPlayer.Character:FindFirstChildOfClass("Tool")
 _G.on = Loop
 while _G.on == true do 
