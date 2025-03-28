@@ -93,27 +93,15 @@ do
     local ToggleMobKill = Tabs.Main:AddToggle("Toggle Mob Kill", { Title = "Toggle Mob Kill", Default = false })
 
     ToggleMobKill:OnChanged(function(Loop)
+        local a = game.Players.LocalPlayer.Character:FindFirstChildOfClass("Tool")
         _G.on = Loop
-        while _G.on do 
-            task.wait(0.8)
-            
-            local player = game.Players.LocalPlayer
-            local tool = player.Character and player.Character:FindFirstChildOfClass("Tool")
-            if not tool then continue end  -- Skip iteration if no tool is found
-            
-            for _, enemy in pairs(game.Workspace.Enemies:GetChildren()) do
-                if string.find(enemy.Name, mob) then
-                    local remotes = game:GetService("ReplicatedStorage").Remotes
-                    if remotes:FindFirstChild("UseItem") then
-                        remotes.UseItem:FireServer(unpack(args))
-                    end
-                    
-                    local part = enemy:FindFirstChildOfClass("Part")
-                    if part then
-                        -- Simulate touching the enemy
-                        firetouchinterest(tool.Handle, part, 0)
-                        firetouchinterest(tool.Handle, part, 1)
-                    end
+        while _G.on == true do 
+            task.wait(.8)
+            for _,v in pairs(game.Workspace.Enemies:GetChildren()) do
+                if string.find(v.Name, mob) then
+                    game:GetService("ReplicatedStorage").Remotes.UseItem:FireServer(unpack(args))
+                    firetouchinterest(a.Handle, v:FindFirstChildOfClass("Part"), 0)
+                    firetouchinterest(a.Handle, v:FindFirstChildOfClass("Part"), 1)
                 end
             end
         end
