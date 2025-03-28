@@ -164,7 +164,23 @@ do
 
 --Mob Areas ---------------------------------------------------------------
 
+-- Areas Table: Contains the names of the areas
 local areas = {
+    "Lvl 0 Area", "Lvl 5 Area", "Lvl 10 Area", "Lvl 20 Area", "Lvl 30 Area", "Lvl 40 Area",
+    "Lvl 50 Area", "Lvl 60 Area", "Lvl 70 Area", "Lvl 80 Area", "Lvl 90 Area", "Lvl 100 Area",
+    "Lvl 120 Area", "Lvl 140 Area", "Lvl 170 Area", "Lvl 200 Area", "Lvl 250 Area", "Lvl 500 Area",
+    "Lvl 750 Area", "Lvl 1k Area", "Lvl 2.5k Area", "Lvl 5k Area", "Lvl 10k Area", "Lvl 12.5k Area",
+    "Lvl 15k Area", "Lvl 17.5k Area", "Lvl 20k Area", "Lvl 22.5k Area", "Lvl 25k Area", "Lvl 27.5k Area",
+    "Lvl 30k Area", "Lvl 32.5k Area", "Lvl 35k Area", "Lvl 37.5k Area", "Lvl 40k Area", "Lvl 42.5k Area",
+    "Lvl 45k Area", "Lvl 47.5k Area", "Lvl 50k Area", "Lvl 60k Area", "Lvl 70k Area", "Lvl 80k Area",
+    "Lvl 90k Area", "Lvl 100k Area", "Lvl 125k Area", "Lvl 150k Area", "Lvl 175k Area", "Lvl 200k Area",
+    "Lvl 250k Area", "Lvl 300k Area", "Lvl 350k Area", "Lvl 400k Area", "Lvl 450k Area", "Lvl 500k Area",
+    "Lvl 600k Area", "Lvl 750k Area", "Lvl 1.0m Area", "Lvl 1.5m Area", "Lvl 2.0m Area", "Lvl 2.5m Area",
+    "Lvl 3.0m Area", "Lvl 3.5m Area", "Lvl 4.0m Area", "Lvl 4.5m Area", "Secret Bosses"
+}
+
+-- Mobs Table: Contains the mobs for each area
+local mobs = {
     ["Lvl 0 Area"] = {"Goblin", "Goblin Leader"},
     ["Lvl 5 Area"] = {"Mummy", "Sandman"},
     ["Lvl 10 Area"] = {"Ice Guardian", "Frostbite Ice Knight"},
@@ -229,28 +245,34 @@ local areas = {
     ["Lvl 3.5m Area"] = {"Luck Deity"},
     ["Lvl 4.0m Area"] = {"Sea Deity"},
     ["Lvl 4.5m Area"] = {"ClockworkMinion", "Clockwork Miniboss", "EntropyOrb", "Entropy Deity"},
-    ["Secret Bosses"] = {"Scrub", "Dark Skeleton", "The Currupted Bone Lord [FINAL BOSS]", "Light Knight", "Keeper of all Light", "MoonMan", "Spate", "BoldsGold", "The Dark Lord", "I Bone Lord", "Meme", "Ewansiha", "WEE WOO BOSS!!11!", "Hazarmaveth", "Elftronic", "Snowtronic", "Santa 2.0", "Golden Krampus", "Halloween Spirit", "amogus", "Rezokar"},
+    ["Secret Bosses"] = {"Scrub", "Dark Skeleton", "The Currupted Bone Lord [FINAL BOSS]", "Light Knight", "Keeper of all Light", "MoonMan", "Spate", "BoldsGold", "The Dark Lord", "I Bone Lord", "Meme", "Ewansiha", "WEE WOO BOSS!!11!", "Hazarmaveth", "Elftronic", "Snowtronic", "Santa 2.0", "Golden Krampus", "Halloween Spirit", "amogus", "Rezokar"}
 }
 
-local selectedArea = "Lvl 0 Area"  -- Default selected area
+
+local selectedArea = ""  -- Default selected area
 local selectedMob = ""  -- Default mob
 
--- Function to update the mob dropdown based on selected area
+-- Function to update the mob dropdown based on the selected area
 local function updateMobDropdown()
     if MobDropdown then
-        local mobs = areas[selectedArea] or {}
-        MobDropdown:SetOptions(mobs)
-        selectedMob = mobs[1] or ""  -- Set the first mob as the default selected one
+        local mobOptions = mobs[selectedArea] or {}
+        MobDropdown:SetOptions(mobOptions)
+        selectedMob = mobOptions[1] or ""  -- Set the first mob as the default selected one
     end
 end
 
+-- Helper function to safely update dropdowns
+local function createDropdown(title, options, defaultValue)
+    return Tabs.MobAreas:AddDropdown(title, {
+        Title = title,
+        Values = options,
+        Multi = false,
+        Default = defaultValue,
+    })
+end
+
 -- Create Area Dropdown
-local AreaDropdown = Tabs.MobAreas:AddDropdown("AreaDropdown", {
-    Title = "Area",
-    Values = {table.unpack(areas)},  -- Extract keys from the 'areas' table
-    Multi = false,
-    Default = selectedArea,
-})
+local AreaDropdown = createDropdown("Area", areas, selectedArea)
 
 -- Listen for area changes and update the mob dropdown
 AreaDropdown:OnChanged(function(area)
@@ -258,13 +280,8 @@ AreaDropdown:OnChanged(function(area)
     updateMobDropdown()  -- Update mobs based on selected area
 end)
 
--- Create Mob Spawns Dropdown
-local MobDropdown = Tabs.MobAreas:AddDropdown("MobDropdown", {
-    Title = "Mob Spawns",
-    Values = areas[selectedArea] or {},  -- Populate with mobs from the selected area
-    Multi = true,
-    Default = "Select Mob",
-})
+-- Create Mob Dropdown
+local MobDropdown = createDropdown("Mob Spawns", mobs[selectedArea] or {}, "Select Mob")
 
 -- Listen for mob selection and update the selected mob
 MobDropdown:OnChanged(function(mobName)
@@ -279,7 +296,6 @@ ToggleMob:OnChanged(function(Loop)
 
     -- Ensure character exists and is valid
     if not character then return end
-
     local humanoidRootPart = character:FindFirstChild("HumanoidRootPart")
     if not humanoidRootPart then return end
 
@@ -302,7 +318,7 @@ ToggleMob:OnChanged(function(Loop)
     end
 end)
 
--- Call to initialize the mob dropdown with initial values
+-- Initialize the mob dropdown with the first set of mobs based on the initial area
 updateMobDropdown()
 
 end
