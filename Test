@@ -252,16 +252,16 @@ local mobs = {
 local selectedArea = ""  -- Default selected area
 local selectedMob = ""  -- Default mob
 
--- Function to update the mob dropdown based on the selected area
+-- Function to update the mob dropdown based on selected area
 local function updateMobDropdown()
     if MobDropdown then
         local mobOptions = mobs[selectedArea] or {}
-        MobDropdown:SetOptions(mobOptions)
+        MobDropdown:SetOptions(mobOptions)  -- Update the options of the mob dropdown
         selectedMob = mobOptions[1] or ""  -- Set the first mob as the default selected one
     end
 end
 
--- Helper function to safely update dropdowns
+-- Helper function to safely create dropdowns
 local function createDropdown(title, options, defaultValue)
     return Tabs.MobAreas:AddDropdown(title, {
         Title = title,
