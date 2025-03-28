@@ -256,7 +256,8 @@ local selectedMob = ""  -- Default mob
 local function updateMobDropdown()
     if MobDropdown then
         local mobOptions = mobs[selectedArea] or {}
-        MobDropdown:SetOptions(mobOptions)  -- Update the options of the mob dropdown
+        -- Update the MobDropdown options
+        MobDropdown:SetOptions(mobOptions)
         selectedMob = mobOptions[1] or ""  -- Set the first mob as the default selected one
     end
 end
