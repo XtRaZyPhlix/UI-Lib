@@ -2,6 +2,7 @@ local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/
 local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
 local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/InterfaceManager.lua"))()
 
+-- Create Window
 local Window = Fluent:CreateWindow({
     Title = "Test",
     SubTitle = "by #####",
@@ -12,6 +13,7 @@ local Window = Fluent:CreateWindow({
     MinimizeKey = Enum.KeyCode.LeftControl  -- Keybind for minimizing
 })
 
+-- Add Tabs
 local Tabs = {
     Main = Window:AddTab({ Title = "Main", Icon = "box" }),
     MobAreas = Window:AddTab({ Title = "Mob Areas", Icon = "person-standing" }),
@@ -22,42 +24,127 @@ local Tabs = {
     Settings = Window:AddTab({ Title = "Settings", Icon = "settings" })
 }
 
---Main Mob Selection ---------------------------------------------------------------
-
+-- Variables for Mob Selection
 local mob = ""
 local item = ""
 
+-- Mob Selection Section
 do
     Tabs.Main:AddParagraph({
         Title = "Mob Selection",
         Content = "Type Mob Name"
     })
 
-local MobName = Tabs.Main:AddInput("Mob Name", {
-    Title = "Mob Name",
-    Default = "*None*",
-    Placeholder = "Mob Name",
-    Numeric = false,
-    Finished = false,
-    Callback = function(input)
-        mob = input
-    end
-})
+    -- Mob Name Input
+    local MobName = Tabs.Main:AddInput("Mob Name", {
+        Title = "Mob Name",
+        Default = "",
+        Placeholder = "Mob Name",
+        Numeric = false,
+        Finished = false,
+        Callback = function(input)
+            mob = input
+        end
+    })
 
-local ToggleMob = Tabs.Main:AddToggle("Toggle Mob", {Title = "Toggle Mob", Default = false })
+    -- Toggle for Mob Interaction
+    local ToggleMob = Tabs.Main:AddToggle("Toggle Mob", { Title = "Toggle Mob", Default = false })
 
-ToggleMob:OnChanged(function(Loop)
-local a = game.Players.LocalPlayer.Character:FindFirstChildOfClass("Tool")
-_G.on = Loop
-while _G.on == true do 
-    task.wait(.8)
-    for _,v in pairs(game.Workspace.Enemies:GetChildren()) do
-        if string.find(v.Name, mob) then
-            v:FindFirstChild("HumanoidRootPart").Anchored = true
-            v:FindFirstChild("HumanoidRootPart").CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame*CFrame.new(1,3,-5)
+    ToggleMob:OnChanged(function(Loop)
+        local player = game.Players.LocalPlayer
+        local character = player.Character
+
+        -- Ensure character exists
+        if not character then return end
+
+        local humanoidRootPart = character:FindFirstChild("HumanoidRootPart")
+        if not humanoidRootPart then return end
+
+        _G.on = Loop
+
+        while _G.on do
+            task.wait(0.8)
+
+            -- Loop through enemies and find matching mobs
+            for _, enemy in pairs(game.Workspace.Enemies:GetChildren()) do
+                if string.find(enemy.Name, mob) then
+                    local enemyRootPart = enemy:FindFirstChild("HumanoidRootPart")
+                    if enemyRootPart then
+                        -- Anchor and move mob if conditions met
+                        enemyRootPart.Anchored = true
+                        enemyRootPart.CFrame = humanoidRootPart.CFrame * CFrame.new(1, 3, -5)
+                    end
+                end
+            end
+        end
+    end)
+
+    local ToggleMobHit = Tabs.Main:AddToggle("Toggle Mob Hit", { Title = "Toggle Mob Hit", Default = false })
+
+ToggleMobHit:OnChanged(function(Loop)
+    _G.enabled = Loop
+    while _G.enabled do 
+        task.wait(0.25)
+        if game:GetService("ReplicatedStorage"):FindFirstChild("Remotes") then
+            local remotes = game:GetService("ReplicatedStorage").Remotes
+            if remotes:FindFirstChild("UseItem") then
+                remotes.UseItem:FireServer(unpack(args))
+            end
         end
     end
-end
+end)
+
+local ToggleMobKill = Tabs.Main:AddToggle("Toggle Mob Kill", { Title = "Toggle Mob Kill", Default = false })
+
+ToggleMobKill:OnChanged(function(Loop)
+    _G.on = Loop
+    while _G.on do 
+        task.wait(0.8)
+        
+        local player = game.Players.LocalPlayer
+        local tool = player.Character and player.Character:FindFirstChildOfClass("Tool")
+        if not tool then continue end  -- Skip iteration if no tool is found
+        
+        for _, enemy in pairs(game.Workspace.Enemies:GetChildren()) do
+            if string.find(enemy.Name, mob) then
+                local remotes = game:GetService("ReplicatedStorage").Remotes
+                if remotes:FindFirstChild("UseItem") then
+                    remotes.UseItem:FireServer(unpack(args))
+                end
+                
+                local part = enemy:FindFirstChildOfClass("Part")
+                if part then
+                    -- Simulate touching the enemy
+                    firetouchinterest(tool.Handle, part, 0)
+                    firetouchinterest(tool.Handle, part, 1)
+                end
+            end
+        end
+    end
+end)
+
+local ToggleGold = Tabs.Main:AddToggle("500k Gold", { Title = "500k Gold", Default = false })
+
+ToggleGold:OnChanged(function(Loop)
+    _G.toggle = Loop
+    while _G.toggle do 
+        task.wait(0.1)  -- Shortened wait time to avoid freezing the script
+        local player = game.Players.LocalPlayer
+        local humanoidRootPart = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
+        
+        -- Ensure character and HumanoidRootPart exist
+        if humanoidRootPart then
+            local finishCFrame = game:GetService("Workspace").Secrets.Obby.Spawns.Finish.CFrame
+            humanoidRootPart.CFrame = finishCFrame
+        end
+
+        -- Check if remotes exist and fire Sell remote
+        local remotes = game:GetService("ReplicatedStorage").Remotes
+        if remotes:FindFirstChild("Sell") then
+            remotes.Sell:FireServer("Diaboli", 5555555)
+        end
+        task.wait(0.01)  -- Small delay before repeating
+    end
 end)
 
 --Mob Areas ---------------------------------------------------------------
@@ -150,6 +237,8 @@ Dropdown:OnChanged(function(area)
         selectedArea = area
         updateMobDropdown()
     end)
+
+
 
 end
 --Addons ---------------------------------------------------------------
