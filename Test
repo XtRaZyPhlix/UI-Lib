@@ -287,7 +287,7 @@ local AreaDropdown = Tabs.MobAreas:AddDropdown("AreaDropdown", {
 AreaDropdown:OnChanged(function(area)
     selectedArea = area
     -- Optionally refresh the mob list whenever an area is selected
-    refreshList()  -- Refresh the mob list based on the selected area
+    MobDropdown:SetValue(nil)  -- Refresh the mob list based on the selected area
 end)
 
 -- Create Mob Dropdown
@@ -304,7 +304,7 @@ MobDropdown:OnChanged(function(mobName)
 end)
 
 -- Create Refresh List Button
-section:AddButton({
+MobAreas:AddButton({
     Title = "Refresh list", 
     Callback = function()
         -- This will refresh the mob list based on the currently selected area
