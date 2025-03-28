@@ -1,0 +1,81 @@
+local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
+local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
+local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/InterfaceManager.lua"))()
+
+-- Create Window
+local Window = Fluent:CreateWindow({
+    Title = "Test",
+    SubTitle = "by #####",
+    TabWidth = 160,
+    Size = UDim2.fromOffset(580, 460),
+    Acrylic = true,  -- Enable blur effect (set to false to disable blur)
+    Theme = "Dark",  -- Set the theme to "Dark" or any other available theme
+    MinimizeKey = Enum.KeyCode.LeftControl  -- Keybind for minimizing
+})
+
+-- Add Tabs
+local Tabs = {
+    Main = Window:AddTab({ Title = "Main", Icon = "box" }),
+    MobAreas = Window:AddTab({ Title = "Mob Areas", Icon = "person-standing" }),
+    Pillar = Window:AddTab({ Title = "Elemental Pilars", Icon = "zap" }),
+    Reach = Window:AddTab({ Title = "Reach", Icon = "swords" }),
+    Gamepass = Window:AddTab({ Title = "Gamepass", Icon = "badge" }),
+    Misc = Window:AddTab({ Title = "Misc", Icon = "hexagon" }),
+    Settings = Window:AddTab({ Title = "Settings", Icon = "settings" })
+}
+
+-- Variables for Mob Selection
+local mob = ""
+local item = ""
+
+-- Mob Selection Section
+do
+    Tabs.Main:AddParagraph({
+        Title = "Mob Selection",
+        Content = "Type Mob Name"
+    })
+
+    -- Mob Name Input
+    local MobName = Tabs.Main:AddInput("Mob Name", {
+        Title = "Mob Name",
+        Default = "",
+        Placeholder = "Mob Name",
+        Numeric = false,
+        Finished = false,
+        Callback = function(input)
+            mob = input
+        end
+    })
+
+    -- Toggle for Mob Interaction
+    local ToggleMob = Tabs.Main:AddToggle("Toggle Mob", { Title = "Toggle Mob", Default = false })
+
+    ToggleMob:OnChanged(function(Loop)
+        local player = game.Players.LocalPlayer
+        local character = player.Character
+
+        -- Ensure character exists
+        if not character then return end
+
+        local humanoidRootPart = character:FindFirstChild("HumanoidRootPart")
+        if not humanoidRootPart then return end
+
+        _G.on = Loop
+
+        while _G.on do
+            task.wait(0.8)
+
+            -- Loop through enemies and find matching mobs
+            for _, enemy in pairs(game.Workspace.Enemies:GetChildren()) do
+                if string.find(enemy.Name, mob) then
+                    local enemyRootPart = enemy:FindFirstChild("HumanoidRootPart")
+                    if enemyRootPart then
+                        -- Anchor and move mob if conditions met
+                        enemyRootPart.Anchored = true
+                        enemyRootPart.CFrame = humanoidRootPart.CFrame * CFrame.new(1, 3, -5)
+                    end
+                end
+            end
+        end
+    end)
+end
