@@ -297,6 +297,7 @@ local MobDropdown = Tabs.MobAreas:AddDropdown("MobDropdown", {
     Default = "Select Mob",
     Callback = function(selectedMob)
         selectedMob = Values
+    end
 })
 
 -- Toggle for Mob Interaction
