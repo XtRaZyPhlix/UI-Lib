@@ -304,7 +304,7 @@ MobDropdown:OnChanged(function(mobName)
 end)
 
 -- Create Refresh List Button
-MobAreas:AddButton({
+local Refreshbutton = Tabs.MobAreas:AddButton({
     Title = "Refresh list", 
     Callback = function()
         -- This will refresh the mob list based on the currently selected area
