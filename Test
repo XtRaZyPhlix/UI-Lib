@@ -81,71 +81,67 @@ do
 
     local ToggleMobHit = Tabs.Main:AddToggle("Toggle Mob Hit", { Title = "Toggle Mob Hit", Default = false })
 
-ToggleMobHit:OnChanged(function(Loop)
-    _G.enabled = Loop
-    while _G.enabled do 
-        task.wait(0.25)
-        if game:GetService("ReplicatedStorage"):FindFirstChild("Remotes") then
+    ToggleMobHit:OnChanged(function(Loop)
+        _G.enabled = Loop
+        while _G.enabled == true do 
+            task.wait(.25) do
+                game:GetService("ReplicatedStorage").Remotes.UseItem:FireServer(unpack(args))
+            end
+        end
+    end)
+
+    local ToggleMobKill = Tabs.Main:AddToggle("Toggle Mob Kill", { Title = "Toggle Mob Kill", Default = false })
+
+    ToggleMobKill:OnChanged(function(Loop)
+        _G.on = Loop
+        while _G.on do 
+            task.wait(0.8)
+            
+            local player = game.Players.LocalPlayer
+            local tool = player.Character and player.Character:FindFirstChildOfClass("Tool")
+            if not tool then continue end  -- Skip iteration if no tool is found
+            
+            for _, enemy in pairs(game.Workspace.Enemies:GetChildren()) do
+                if string.find(enemy.Name, mob) then
+                    local remotes = game:GetService("ReplicatedStorage").Remotes
+                    if remotes:FindFirstChild("UseItem") then
+                        remotes.UseItem:FireServer(unpack(args))
+                    end
+                    
+                    local part = enemy:FindFirstChildOfClass("Part")
+                    if part then
+                        -- Simulate touching the enemy
+                        firetouchinterest(tool.Handle, part, 0)
+                        firetouchinterest(tool.Handle, part, 1)
+                    end
+                end
+            end
+        end
+    end)
+
+    local ToggleGold = Tabs.Main:AddToggle("500k Gold", { Title = "500k Gold", Default = false })
+
+    ToggleGold:OnChanged(function(Loop)
+        _G.toggle = Loop
+        while _G.toggle do 
+            task.wait(0.1)  -- Shortened wait time to avoid freezing the script
+            local player = game.Players.LocalPlayer
+            local humanoidRootPart = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
+            
+            -- Ensure character and HumanoidRootPart exist
+            if humanoidRootPart then
+                local finishCFrame = game:GetService("Workspace").Secrets.Obby.Spawns.Finish.CFrame
+                humanoidRootPart.CFrame = finishCFrame
+            end
+
+            -- Check if remotes exist and fire Sell remote
             local remotes = game:GetService("ReplicatedStorage").Remotes
-            if remotes:FindFirstChild("UseItem") then
-                remotes.UseItem:FireServer(unpack(args))
+            if remotes:FindFirstChild("Sell") then
+                remotes.Sell:FireServer("Diaboli", 5555555)
             end
+            task.wait(0.01)  -- Small delay before repeating
         end
-    end
-end)
-
-local ToggleMobKill = Tabs.Main:AddToggle("Toggle Mob Kill", { Title = "Toggle Mob Kill", Default = false })
-
-ToggleMobKill:OnChanged(function(Loop)
-    _G.on = Loop
-    while _G.on do 
-        task.wait(0.8)
-        
-        local player = game.Players.LocalPlayer
-        local tool = player.Character and player.Character:FindFirstChildOfClass("Tool")
-        if not tool then continue end  -- Skip iteration if no tool is found
-        
-        for _, enemy in pairs(game.Workspace.Enemies:GetChildren()) do
-            if string.find(enemy.Name, mob) then
-                local remotes = game:GetService("ReplicatedStorage").Remotes
-                if remotes:FindFirstChild("UseItem") then
-                    remotes.UseItem:FireServer(unpack(args))
-                end
-                
-                local part = enemy:FindFirstChildOfClass("Part")
-                if part then
-                    -- Simulate touching the enemy
-                    firetouchinterest(tool.Handle, part, 0)
-                    firetouchinterest(tool.Handle, part, 1)
-                end
-            end
-        end
-    end
-end)
-
-local ToggleGold = Tabs.Main:AddToggle("500k Gold", { Title = "500k Gold", Default = false })
-
-ToggleGold:OnChanged(function(Loop)
-    _G.toggle = Loop
-    while _G.toggle do 
-        task.wait(0.1)  -- Shortened wait time to avoid freezing the script
-        local player = game.Players.LocalPlayer
-        local humanoidRootPart = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
-        
-        -- Ensure character and HumanoidRootPart exist
-        if humanoidRootPart then
-            local finishCFrame = game:GetService("Workspace").Secrets.Obby.Spawns.Finish.CFrame
-            humanoidRootPart.CFrame = finishCFrame
-        end
-
-        -- Check if remotes exist and fire Sell remote
-        local remotes = game:GetService("ReplicatedStorage").Remotes
-        if remotes:FindFirstChild("Sell") then
-            remotes.Sell:FireServer("Diaboli", 5555555)
-        end
-        task.wait(0.01)  -- Small delay before repeating
-    end
-end)
+    end)
 
 --Mob Areas ---------------------------------------------------------------
 
