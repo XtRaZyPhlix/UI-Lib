@@ -286,8 +286,7 @@ local AreaDropdown = Tabs.MobAreas:AddDropdown("AreaDropdown", {
 -- Listen for area changes and update the selected area
 AreaDropdown:OnChanged(function(area)
     selectedArea = area
-    -- Optionally refresh the mob list whenever an area is selected
-    MobDropdown:SetValue(nil)  -- Refresh the mob list based on the selected area
+    MobDropdown:SetValue(mobs[selectedArea] or {})
 end)
 
 -- Create Mob Dropdown
@@ -302,16 +301,6 @@ local MobDropdown = Tabs.MobAreas:AddDropdown("MobDropdown", {
 MobDropdown:OnChanged(function(mobName)
     selectedMob = mobName
 end)
-
--- Create Refresh List Button
-local Refreshbutton = Tabs.MobAreas:AddButton({
-    Title = "Refresh list", 
-    Callback = function()
-        -- This will refresh the mob list based on the currently selected area
-        refreshList()  -- Calls refreshList to refresh the mob dropdown options
-        MobDropdown:SetValue(nil)  -- Optionally reset the mob dropdown value (if needed)
-    end
-})
 
 -- Toggle for Mob Interaction
 local ToggleMob = Tabs.MobAreas:AddToggle("ToggleMob", { Title = "Toggle Mob", Default = false })
