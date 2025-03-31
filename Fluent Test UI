@@ -5,7 +5,7 @@ local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.
 -- Create Window
 local Window = Fluent:CreateWindow({
     Title = "Test",
-    SubTitle = "by #####44",
+    SubTitle = "by #####",
     TabWidth = 160,
     Size = UDim2.fromOffset(580, 460),
     Acrylic = true,  -- Enable blur effect (set to false to disable blur)
@@ -251,7 +251,7 @@ local areaMobs = {
 --------------------------------
 
 local selectedArea = "Lvl 0 Area"  -- Default selected area
-local selectedMob2 = ""  -- Default mob
+local selectedMobs = {}  -- Table to store selected mobs
 
 -- Create Area Dropdown
 local AreaDropdown = Tabs.MobAreas:AddDropdown("AreaDropdown", {
@@ -261,17 +261,18 @@ local AreaDropdown = Tabs.MobAreas:AddDropdown("AreaDropdown", {
     Default = "Select Area",
 })
 
--- Create Mob Dropdown
+-- Create Mob Dropdown (Allow multiple mobs to be selected)
 local MobDropdown = Tabs.MobAreas:AddDropdown("MobDropdown", {
     Title = "Mob Spawns",
-    Values = areaMobs[selectedArea],  -- Default mobs based on the selected area
-    Multi = false,
-    Default = "Select Mob",
+    Description = "",
+    Values = areaMobs[selectedArea] or {},  -- Default mobs based on the selected area
+    Multi = true,  -- Allow multiple selections
+    Default = {"Select Mob"},
 })
 
--- Listen for mob selection and update the selected mob
-MobDropdown:OnChanged(function(mobName)
-    selectedMob2 = mobName  -- Update selected mob
+-- Listen for mob selection and update the selected mobs
+MobDropdown:OnChanged(function(mobNames)
+    selectedMobs = mobNames  -- Update selected mobs with the selected list
 end)
 
 -- Listen for area changes and update the selected area and mob dropdown
@@ -280,10 +281,10 @@ AreaDropdown:OnChanged(function(area)
     local mobsForArea = areaMobs[selectedArea]  -- Get mobs for the selected area
     
     -- Update MobDropdown values based on selected area
-    MobDropdown:SetValues(mobsForArea)
+    MobDropdown:SetValues(mobsForArea or {})
 end)
 
--- Toggle for Mob Interaction
+-- Toggle for Mob Interaction (Multiple mobs)
 local ToggleMob2 = Tabs.MobAreas:AddToggle("ToggleMob", { Title = "Toggle Mob", Default = false })
 
 ------------------------------
@@ -303,19 +304,23 @@ ToggleMob2:OnChanged(function(Loop)
 
         -- Loop through enemies and find matching mobs
         for _, enemy in pairs(game.Workspace.Enemies:GetChildren()) do
-            if string.find(enemy.Name, selectedMob2) then
-                local enemyRootPart = enemy:FindFirstChild("HumanoidRootPart")
-                if enemyRootPart then
-                    -- Anchor and move mob if conditions met
-                    enemyRootPart.Anchored = true
-                    enemyRootPart.CFrame = humanoidRootPart.CFrame * CFrame.new(1, 3, -3)
+            for _, selectedMob in pairs(selectedMobs) do
+                -- Ensure selectedMob is a string before passing it to string.find
+                if type(selectedMob) == "string" and string.find(enemy.Name, selectedMob) then
+                    local enemyRootPart = enemy:FindFirstChild("HumanoidRootPart")
+                    if enemyRootPart then
+                        -- Anchor and move mob if conditions met
+                        enemyRootPart.Anchored = true
+                        enemyRootPart.CFrame = humanoidRootPart.CFrame * CFrame.new(1, 3, -3)
+                    end
                 end
             end
         end
     end
 end)
 
--- Toggle for Mob Hit Interaction
+
+-- Toggle for Mob Hit Interaction (Multiple mobs)
 local ToggleMobHit2 = Tabs.MobAreas:AddToggle("Toggle Mob Hit", { Title = "Toggle Mob Hit", Default = false })
 
 ToggleMobHit2:OnChanged(function(Loop)
@@ -336,36 +341,39 @@ ToggleMobHit2:OnChanged(function(Loop)
     end
 end)
 
--- Toggle for Mob Kill Interaction
+-- Toggle for Mob Kill Interaction (Multiple mobs)
 local ToggleMobKill2 = Tabs.MobAreas:AddToggle("Toggle Mob Kill", { Title = "Toggle Mob Kill", Default = false })
 
 ToggleMobKill2:OnChanged(function(Loop)
     _G.on = Loop
     while _G.on do
-        task.wait(0.8)
+        task.wait(0.25)
 
-        local character = player.Character
+        local character = game.Players.LocalPlayer.Character
         local tool = character and character:FindFirstChildOfClass("Tool")
         if not tool then continue end  -- Skip iteration if no tool is found
 
         for _, enemy in pairs(game.Workspace.Enemies:GetChildren()) do
-            if string.find(enemy.Name, selectedMob2) then
-                -- Ensure args is defined and is a table
-                if type(args) ~= "table" then
-                    args = {}  -- Default to an empty table if args is invalid
-                end
+            for _, selectedMob in pairs(selectedMobs) do
+                -- Ensure selectedMob is a string before passing it to string.find
+                if type(selectedMob) == "string" and string.find(enemy.Name, selectedMob) then
+                    -- Ensure args is defined and is a table
+                    if type(args) ~= "table" then
+                        args = {}  -- Default to an empty table if args is invalid
+                    end
 
-                -- Fire the remote only if it's a valid table
-                local remotes = game:GetService("ReplicatedStorage").Remotes
-                if remotes and remotes:FindFirstChild("UseItem") then
-                    remotes.UseItem:FireServer(unpack(args))  -- Fire remote with unpacked args
-                end
+                    -- Fire the remote only if it's a valid table
+                    local remotes = game:GetService("ReplicatedStorage").Remotes
+                    if remotes and remotes:FindFirstChild("UseItem") then
+                        remotes.UseItem:FireServer(unpack(args))  -- Fire remote with unpacked args
+                    end
 
-                local part = enemy:FindFirstChildOfClass("Part")
-                if part then
-                    -- Simulate touching the enemy
-                    firetouchinterest(tool.Handle, part, 0)
-                    firetouchinterest(tool.Handle, part, 1)
+                    local part = enemy:FindFirstChildOfClass("Part")
+                    if part then
+                        -- Simulate touching the enemy
+                        firetouchinterest(tool.Handle, part, 0)
+                        firetouchinterest(tool.Handle, part, 1)
+                    end
                 end
             end
         end
@@ -515,9 +523,106 @@ Tabs.Pillar:AddParagraph({
     Content = ""
 })
 
-local ToggleHitSolar = Tabs.Pillar:AddToggle("Toggle Hit Titan Solis 🪐", { Title = "Toggle Hit Titan Solis 🪐", Default = false })
-handleToggle(ToggleHitSolar, "Titan Solis", function(v)
-    attackEnemy(game.Players.LocalPlayer.Character:FindFirstChildOfClass("Tool"), v)
+-- Create Mob Dropdown
+local ChooseMob1 = Tabs.Pillar:AddDropdown("Choose Mob 🪐", {
+    Title = "Mob Spawns",
+    Description = "",
+    Values = {"Titan Solis", "Flare"},  -- Default mobs based on the selected area
+    Multi = true,
+    Default = {"Select Mob"},
+})
+
+-- Listen for mob selection and update the selected mob
+ChooseMob1:OnChanged(function(Values)
+    CMobSpawn1 = Values
+end)
+
+-- Toggle for Mob Interaction
+local ToggleMobSpawn = Tabs.Pillar:AddToggle("Toggle Solis/Flare 🪐", { Title = "Toggle Solis/Flare 🪐", Default = false })
+
+------------------------------
+
+ToggleMobSpawn:OnChanged(function(Loop)
+    local character = game.Players.LocalPlayer.Character
+
+    -- Ensure character exists and is valid
+    if not character then return end
+    local humanoidRootPart = character:FindFirstChild("HumanoidRootPart")
+    if not humanoidRootPart then return end
+
+    _G.on = Loop  -- Store the toggle state
+
+    while _G.on do
+        task.wait(0.8)  -- Adjust delay for better performance
+
+        -- Loop through enemies and find matching mobs
+        for _, enemy in pairs(game.Workspace.Enemies:GetChildren()) do
+            if string.find(enemy.Name, CMobSpawn1) then
+                local enemyRootPart = enemy:FindFirstChild("HumanoidRootPart")
+                if enemyRootPart then
+                    -- Anchor and move mob if conditions met
+                    enemyRootPart.Anchored = true
+                    enemyRootPart.CFrame = humanoidRootPart.CFrame * CFrame.new(1, 3, -3)
+                end
+            end
+        end
+    end
+end)
+
+Tabs.Pillar:AddButton({
+    Title = "Tp to Flares 🪐",
+    Callback = function()
+        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(895.248596, 321.131317, 2392.60742, 0.99999994, -6.26771246e-10, -0.000354468561, 5.76313275e-10, 1, -1.4234827e-07, 0.000354468561, 1.42348057e-07, 0.99999994)
+    end
+})
+
+-- Create Mob Dropdown
+local ChooseMob2 = Tabs.Pillar:AddDropdown("Choose Mob 🪐", {
+    Title = "Mob Hits",
+    Description = "",
+    Values = {"Titan Solis", "Flare"},  -- Default mobs based on the selected area
+    Multi = true,
+    Default = {"Select Mob"},
+})
+
+-- Listen for mob selection and update the selected mob
+ChooseMob2:OnChanged(function(Values)
+    CMob1 = Values
+end)
+
+local ToggleSolarKill2 = Tabs.Pillar:AddToggle("Toggle Solar Kill 🪐", { Title = "Toggle Solar Kill 🪐", Default = false })
+
+ToggleSolarKill2:OnChanged(function(Loop)
+    _G.on = Loop
+    while _G.on do
+        task.wait(0.25)
+
+        local character = game.Players.LocalPlayer.Character
+        local tool = character and character:FindFirstChildOfClass("Tool")
+        if not tool then continue end  -- Skip iteration if no tool is found
+
+        for _, enemy in pairs(game.Workspace.Enemies:GetChildren()) do
+            if string.find(enemy.Name, CMob1) then
+                -- Ensure args is defined and is a table
+                if type(args) ~= "table" then
+                    args = {}  -- Default to an empty table if args is invalid
+                end
+
+                -- Fire the remote only if it's a valid table
+                local remotes = game:GetService("ReplicatedStorage").Remotes
+                if remotes and remotes:FindFirstChild("UseItem") then
+                    remotes.UseItem:FireServer(unpack(args))  -- Fire remote with unpacked args
+                end
+
+                local part = enemy:FindFirstChildOfClass("Part")
+                if part then
+                    -- Simulate touching the enemy
+                    firetouchinterest(tool.Handle, part, 0)
+                    firetouchinterest(tool.Handle, part, 1)
+                end
+            end
+        end
+    end
 end)
 
 -- Plasma Elemental
@@ -526,9 +631,60 @@ Tabs.Pillar:AddParagraph({
     Content = ""
 })
 
-local ToggleHitPlasma = Tabs.Pillar:AddToggle("Toggle Titans 🌌", { Title = "Toggle Titans 🌌", Default = false })
-handleToggle(ToggleHitPlasma, "Titan", function(v)
-    setEnemyCFrame(v, game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame * CFrame.new(1, 3, -5))
+Tabs.Pillar:AddButton({
+    Title = "Tp to Mother of Chaos 🌌",
+    Callback = function()
+        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-6199.5874, 106.824211, -40.1784744, -0.0218606181, -1.14025532e-07, 0.999761045, -5.28366968e-08, 1, 1.12897467e-07, -0.999761045, -5.03560642e-08, -0.0218606181)
+    end
+})
+
+-- Create Mob Dropdown
+local ChooseMob3 = Tabs.Pillar:AddDropdown("Choose Mob 🌌", {
+    Title = "Choose Mob",
+    Description = "",
+    Values = {"Mother of Chaos", "Aureum Statera", "ElementalPillar"},  -- Default mobs based on the selected area
+    Multi = true,
+    Default = {"Select Mob"},
+})
+
+-- Listen for mob selection and update the selected mob
+ChooseMob3:OnChanged(function(Values)
+    CMob2 = Values
+end)
+
+local TogglePlasmaKill2 = Tabs.Pillar:AddToggle("Toggle Plasma Kill 🌌", { Title = "Toggle Plasma Kill 🌌", Default = false })
+
+TogglePlasmaKill2:OnChanged(function(Loop)
+    _G.on = Loop
+    while _G.on do
+        task.wait(0.25)
+
+        local character = game.Players.LocalPlayer.Character
+        local tool = character and character:FindFirstChildOfClass("Tool")
+        if not tool then continue end  -- Skip iteration if no tool is found
+
+        for _, enemy in pairs(game.Workspace.Enemies:GetChildren()) do
+            if string.find(enemy.Name, CMob2) then
+                -- Ensure args is defined and is a table
+                if type(args) ~= "table" then
+                    args = {}  -- Default to an empty table if args is invalid
+                end
+
+                -- Fire the remote only if it's a valid table
+                local remotes = game:GetService("ReplicatedStorage").Remotes
+                if remotes and remotes:FindFirstChild("UseItem") then
+                    remotes.UseItem:FireServer(unpack(args))  -- Fire remote with unpacked args
+                end
+
+                local part = enemy:FindFirstChildOfClass("Part")
+                if part then
+                    -- Simulate touching the enemy
+                    firetouchinterest(tool.Handle, part, 0)
+                    firetouchinterest(tool.Handle, part, 1)
+                end
+            end
+        end
+    end
 end)
 
 -- Reach ---------------------------------------------------------------
@@ -636,7 +792,7 @@ local function createGamepassButton(name, id)
 end
 
 -- Create Gamepass buttons
-createGamepassButton("Quick Travel")
+createGamepassButton("QuickTravel")
 createGamepassButton("Teleportation")
 createGamepassButton("VIP")
 createGamepassButton("Double XP")
@@ -653,6 +809,24 @@ Tabs.Gamepass:AddParagraph({
 
 
 --Misc ---------------------------------------------------------------
+
+local ToggleHeal = Tabs.Misc:AddToggle("Auto Heal", {Title = "Auto Heal", Default = false})
+
+ToggleHeal:OnChanged(function(Loop)
+    --Variables
+    Heal = game:GetService("Workspace").Parts.Decoration["Healing Pond"].Pad
+    Chara = Game.Players.LocalPlayer.Character
+    basepart = Chara:FindFirstChildWhichIsA("BasePart")
+    --Script
+    getgenv().Heal = Loop
+    while getgenv().Heal == true do task.wait()
+        pcall(function() --Because I am lazy and don't wanna spend time optimizing
+            firetouchinterest(Heal,basepart,0) --This heals you
+            task.wait(.2)
+            firetouchinterest(Heal,basepart,1)
+        end)
+    end
+end)
 
 Tabs.Misc:AddButton({
     Title = "SimpleSpy2 GUI",
