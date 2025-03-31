@@ -285,6 +285,22 @@ AreaDropdown:OnChanged(function(area)
     MobDropdown:SetValue(mobsForArea)
 end)
 
+-- Listen for area changes and update the selected area and mob dropdown
+AreaDropdown:OnChanged(function(area)
+    selectedArea = area  -- Update selected area
+    local mobsForArea = areaMobs[selectedArea]  -- Get mobs for the selected area
+    
+    -- Update MobDropdown values based on selected area
+    MobDropdown:SetValues(mobsForArea)
+    
+    -- Optionally, reset the mob dropdown selection if needed
+    MobDropdown:SetValue(mobsForArea[1])  -- Select the first mob by default
+end)
+
+-- Initialize the dropdown with the default area
+AreaDropdown:SetValue(selectedArea)
+MobDropdown:SetValue(selectedMob)
+
 -- Toggle for Mob Interaction
 local ToggleMob = Tabs.MobAreas:AddToggle("ToggleMob", { Title = "Toggle Mob", Default = false })
 
