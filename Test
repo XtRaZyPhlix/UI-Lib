@@ -5,7 +5,7 @@ local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.
 -- Create Window
 local Window = Fluent:CreateWindow({
     Title = "Test",
-    SubTitle = "by #####",
+    SubTitle = "by #####4",
     TabWidth = 160,
     Size = UDim2.fromOffset(580, 460),
     Acrylic = true,  -- Enable blur effect (set to false to disable blur)
@@ -469,13 +469,14 @@ Tabs.Pillar:AddParagraph({
     Content = ""
 })
 
-local ToggleWater = Tabs.Pillar:AddToggle("Toggle Water Orbs 💧", {Title = "Toggle Water Orbs 💧", Default = false })
-
-    ToggleWater:OnChanged(function(Loop)
-        Orb = game:GetService("Workspace").WaterOrbs.Orb
+Orb = game:GetService("Workspace").WaterOrbs.Orb
         Chara = game.Players.LocalPlayer.Character
         basepart = Chara:FindFirstChildWhichIsA("BasePart")
         Count = 0
+
+local ToggleWater = Tabs.Pillar:AddToggle("Toggle Water Orbs 💧", {Title = "Toggle Water Orbs 💧", Default = false })
+
+    ToggleWater:OnChanged(function(Loop)
         --Script
         _G.Orbs = Loop
         while _G.Orbs == true do
