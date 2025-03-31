@@ -5,7 +5,7 @@ local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.
 -- Create Window
 local Window = Fluent:CreateWindow({
     Title = "Test",
-    SubTitle = "by #####22",
+    SubTitle = "by #####",
     TabWidth = 160,
     Size = UDim2.fromOffset(580, 460),
     Acrylic = true,  -- Enable blur effect (set to false to disable blur)
@@ -251,7 +251,7 @@ local areaMobs = {
 --------------------------------
 
 local selectedArea = "Lvl 0 Area"  -- Default selected area
-local selectedMob = ""  -- Default mob
+local selectedMob2 = ""  -- Default mob
 
 -- Create Area Dropdown
 local AreaDropdown = Tabs.MobAreas:AddDropdown("AreaDropdown", {
@@ -271,7 +271,7 @@ local MobDropdown = Tabs.MobAreas:AddDropdown("MobDropdown", {
 
 -- Listen for mob selection and update the selected mob
 MobDropdown:OnChanged(function(mobName)
-    selectedMob = mobName  -- Update selected mob
+    selectedMob2 = mobName  -- Update selected mob
 end)
 
 -- Listen for area changes and update the selected area and mob dropdown
@@ -284,11 +284,11 @@ AreaDropdown:OnChanged(function(area)
 end)
 
 -- Toggle for Mob Interaction
-local ToggleMob = Tabs.MobAreas:AddToggle("ToggleMob", { Title = "Toggle Mob", Default = false })
+local ToggleMob2 = Tabs.MobAreas:AddToggle("ToggleMob", { Title = "Toggle Mob", Default = false })
 
 ------------------------------
 
-ToggleMob:OnChanged(function(Loop)
+ToggleMob2:OnChanged(function(Loop)
     local character = game.Players.LocalPlayer.Character
 
     -- Ensure character exists and is valid
@@ -303,7 +303,7 @@ ToggleMob:OnChanged(function(Loop)
 
         -- Loop through enemies and find matching mobs
         for _, enemy in pairs(game.Workspace.Enemies:GetChildren()) do
-            if string.find(enemy.Name, selectedMob) then
+            if string.find(enemy.Name, selectedMob2) then
                 local enemyRootPart = enemy:FindFirstChild("HumanoidRootPart")
                 if enemyRootPart then
                     -- Anchor and move mob if conditions met
