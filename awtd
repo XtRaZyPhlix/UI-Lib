@@ -5,7 +5,7 @@ local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.
 -- Create Window
 local Window = Fluent:CreateWindow({
     Title = "Test",
-    SubTitle = "by #####2",
+    SubTitle = "by #####",
     TabWidth = 160,
     Size = UDim2.fromOffset(580, 460),
     Acrylic = true,  -- Enable blur effect (set to false to disable blur)
@@ -265,7 +265,7 @@ local AreaDropdown = Tabs.MobAreas:AddDropdown("AreaDropdown", {
 local MobDropdown = Tabs.MobAreas:AddDropdown("MobDropdown", {
     Title = "Mob Spawns",
     Description = "",
-    Values = areaMobs[selectedArea],  -- Default mobs based on the selected area
+    Values = areaMobs[selectedArea] or {},  -- Default mobs based on the selected area
     Multi = true,
     Default = {"Select Mob"},
 })
@@ -281,7 +281,7 @@ AreaDropdown:OnChanged(function(area)
     local mobsForArea = areaMobs[selectedArea]  -- Get mobs for the selected area
     
     -- Update MobDropdown values based on selected area
-    MobDropdown:SetValues(mobsForArea)
+    MobDropdown:SetValues(mobsForArea or {})
 end)
 
 -- Toggle for Mob Interaction
@@ -345,7 +345,7 @@ ToggleMobKill2:OnChanged(function(Loop)
     while _G.on do
         task.wait(0.25)
 
-        local character = player.Character
+        local character = game.Players.LocalPlayer.Character
         local tool = character and character:FindFirstChildOfClass("Tool")
         if not tool then continue end  -- Skip iteration if no tool is found
 
@@ -572,6 +572,7 @@ Tabs.Pillar:AddButton({
 -- Create Mob Dropdown
 local ChooseMob2 = Tabs.Pillar:AddDropdown("Choose Mob 🪐", {
     Title = "Mob Hits",
+    Description = "",
     Values = {"Titan Solis", "Flare"},  -- Default mobs based on the selected area
     Multi = true,
     Default = {"Select Mob"},
@@ -582,14 +583,14 @@ ChooseMob2:OnChanged(function(Values)
     CMob1 = Values
 end)
 
-local ToggleSolarKill2 = Tabs.Pillar:AddToggle("Toggle Solar Kill" 🪐, { Title = "Toggle Solar Kill 🪐", Default = false })
+local ToggleSolarKill2 = Tabs.Pillar:AddToggle("Toggle Solar Kill 🪐", { Title = "Toggle Solar Kill 🪐", Default = false })
 
 ToggleSolarKill2:OnChanged(function(Loop)
     _G.on = Loop
     while _G.on do
         task.wait(0.25)
 
-        local character = player.Character
+        local character = game.Players.LocalPlayer.Character
         local tool = character and character:FindFirstChildOfClass("Tool")
         if not tool then continue end  -- Skip iteration if no tool is found
 
@@ -651,7 +652,7 @@ TogglePlasmaKill2:OnChanged(function(Loop)
     while _G.on do
         task.wait(0.25)
 
-        local character = player.Character
+        local character = game.Players.LocalPlayer.Character
         local tool = character and character:FindFirstChildOfClass("Tool")
         if not tool then continue end  -- Skip iteration if no tool is found
 
@@ -678,8 +679,6 @@ TogglePlasmaKill2:OnChanged(function(Loop)
         end
     end
 end)
-
-
 
 -- Reach ---------------------------------------------------------------
 
@@ -803,6 +802,24 @@ Tabs.Gamepass:AddParagraph({
 
 
 --Misc ---------------------------------------------------------------
+
+local ToggleHeal = Tabs.Misc:AddToggle("Auto Heal", {Title = "Auto Heal", Default = false})
+
+ToggleHeal:OnChanged(function(Loop)
+    --Variables
+    Heal = game:GetService("Workspace").Parts.Decoration["Healing Pond"].Pad
+    Chara = Game.Players.LocalPlayer.Character
+    basepart = Chara:FindFirstChildWhichIsA("BasePart")
+    --Script
+    getgenv().Heal = Loop
+    while getgenv().Heal == true do task.wait()
+        pcall(function() --Because I am lazy and don't wanna spend time optimizing
+            firetouchinterest(Heal,basepart,0) --This heals you
+            task.wait(.2)
+            firetouchinterest(Heal,basepart,1)
+        end)
+    end
+end)
 
 Tabs.Misc:AddButton({
     Title = "SimpleSpy2 GUI",
