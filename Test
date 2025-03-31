@@ -5,7 +5,7 @@ local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.
 -- Create Window
 local Window = Fluent:CreateWindow({
     Title = "Test",
-    SubTitle = "by #####4",
+    SubTitle = "by #####",
     TabWidth = 160,
     Size = UDim2.fromOffset(580, 460),
     Acrylic = true,  -- Enable blur effect (set to false to disable blur)
@@ -533,6 +533,42 @@ end)
 
 --Reach ---------------------------------------------------------------
 
+local XValue = Tabs.Reach:AddSlider("X Value", {
+    Title = "X Value",
+    Description = "",
+    Default = 1,
+    Min = 1,
+    Max = 2048,
+    Rounding = 1,
+    Callback = function(Value)
+        X = Value
+    end
+})
+
+local YValue = Tabs.Reach:AddSlider("Y Value", {
+    Title = "Y Value",
+    Description = "",
+    Default = 1,
+    Min = 1,
+    Max = 2048,
+    Rounding = 1,
+    Callback = function(Value)
+        Y = Value
+    end
+})
+
+local ZValue = Tabs.Reach:AddSlider("Z Value", {
+    Title = "Z Value",
+    Description = "",
+    Default = 1,
+    Min = 1,
+    Max = 2048,
+    Rounding = 1,
+    Callback = function(Value)
+        Z = Value
+    end
+})
+
 Tabs.Reach:AddButton({
     Title = "Apply Sword Reach ⚔️",
     Description = "",
@@ -578,7 +614,6 @@ Tabs.Gamepass:AddButton({
         local parte = Instance.new("Model")
         parte.Parent = game:GetService("Players").LocalPlayer
         parte.Name = "QuickTravel"
-    end
 })
 
 Tabs.Gamepass:AddButton({
@@ -588,7 +623,6 @@ Tabs.Gamepass:AddButton({
         local parte = Instance.new("Model")
         parte.Parent = game:GetService("Players").LocalPlayer
         parte.Name = "Teleportation"
-    end
 })
 
 Tabs.Gamepass:AddButton({
@@ -598,7 +632,6 @@ Tabs.Gamepass:AddButton({
         local parte = Instance.new("Model")
         parte.Parent = game:GetService("Players").LocalPlayer
         parte.Name = "VIP"  
-    end
 })
 
 Tabs.Gamepass:AddButton({
@@ -608,7 +641,6 @@ Tabs.Gamepass:AddButton({
         local parte = Instance.new("Model")
         parte.Parent = game:GetService("Players").LocalPlayer
         parte.Name = "DoubleXP"
-    end
 })
 
 Tabs.Gamepass:AddButton({
@@ -620,7 +652,6 @@ Tabs.Gamepass:AddButton({
         parte.Name = "IsAdmin"
 
         game:GetService("Players").LocalPlayer.PlayerID = 239345228
-    end
 })
 
 Tabs.Gamepass:AddButton({
@@ -632,7 +663,6 @@ Tabs.Gamepass:AddButton({
         parte.Name = "IsOverseer"
 
         game:GetService("Players").LocalPlayer.PlayerID = 360470140
-    end
 })
 
 Tabs.Gamepass:AddButton({
@@ -644,7 +674,6 @@ Tabs.Gamepass:AddButton({
         parte.Name = "IsDeveloper"
 
         game:GetService("Players").LocalPlayer.PlayerID = 65001136
-    end
 })
 
 Tabs.Gamepass:AddParagraph({
