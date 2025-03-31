@@ -5,7 +5,7 @@ local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.
 -- Create Window
 local Window = Fluent:CreateWindow({
     Title = "Test",
-    SubTitle = "by #####5",
+    SubTitle = "by #####4",
     TabWidth = 160,
     Size = UDim2.fromOffset(580, 460),
     Acrylic = true,  -- Enable blur effect (set to false to disable blur)
@@ -518,9 +518,10 @@ Tabs.Pillar:AddParagraph({
 -- Create Mob Dropdown
 local ChooseMob = Tabs.Pillar:AddDropdown("Choose Mob 🪐", {
     Title = "Mob Spawns",
+    Description = "",
     Values = {"Titan Solis", "Flare"},  -- Default mobs based on the selected area
     Multi = true,
-    Default = "Select Mob",
+    Default = {"Select Mob"},
 })
 
 -- Listen for mob selection and update the selected mob
