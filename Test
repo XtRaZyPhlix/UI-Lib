@@ -269,7 +269,7 @@ local selectedMob = "Goblin"  -- Default mob
 -- Create Area Dropdown
 local AreaDropdown = Tabs.MobAreas:AddDropdown("AreaDropdown", {
     Title = "Area",
-    Values = {"Lvl 0 Area", "Lvl 5 Area", "Lvl 10 Area"},  -- Example areas
+    Values = areas,  -- Example areas
     Multi = false,
     Default = "Select Area",
 })
@@ -281,9 +281,6 @@ AreaDropdown:OnChanged(function(area)
     
     -- Update MobDropdown values based on selected area
     MobDropdown:SetValues(mobsForArea)
-    
-    -- Optionally, reset the mob dropdown selection if needed
-    MobDropdown:SetValue(mobsForArea[1])  -- Select the first mob by default
 end)
 
 ----------------------------------
