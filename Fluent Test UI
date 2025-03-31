@@ -5,7 +5,7 @@ local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.
 -- Create Window
 local Window = Fluent:CreateWindow({
     Title = "Test",
-    SubTitle = "by #####",
+    SubTitle = "by #####2",
     TabWidth = 160,
     Size = UDim2.fromOffset(580, 460),
     Acrylic = true,  -- Enable blur effect (set to false to disable blur)
@@ -394,7 +394,7 @@ Tabs.Pillar:AddParagraph({
     Content = ""
 })
 
-local ToggleTpIce = Tabs.Main:AddToggle("Toggle Titan Glacies ❄️", {Title = "Toggle Titan Glacies ❄️", Default = false })
+local ToggleTpIce = Tabs.Pillar:AddToggle("Toggle Titan Glacies ❄️", {Title = "Toggle Titan Glacies ❄️", Default = false })
 
     ToggleTpIce:OnChanged(function(Loop)
         _G.on = Loop
@@ -409,7 +409,7 @@ local ToggleTpIce = Tabs.Main:AddToggle("Toggle Titan Glacies ❄️", {Title = 
         end
     end)
 
-local ToggleHitIce = Tabs.Main:AddToggle("Toggle Hit Titan Glacies ❄️", {Title = "Toggle Hit Titan Glacies ❄️", Default = false })
+local ToggleHitIce = Tabs.Pillar:AddToggle("Toggle Hit Titan Glacies ❄️", {Title = "Toggle Hit Titan Glacies ❄️", Default = false })
 
     ToggleHitIce:OnChanged(function(Loop)
         local a = game.Players.LocalPlayer.Character:FindFirstChildOfClass("Tool")
