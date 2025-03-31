@@ -5,7 +5,7 @@ local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.
 -- Create Window
 local Window = Fluent:CreateWindow({
     Title = "Test",
-    SubTitle = "by #####",
+    SubTitle = "by #####2",
     TabWidth = 160,
     Size = UDim2.fromOffset(580, 460),
     Acrylic = true,  -- Enable blur effect (set to false to disable blur)
@@ -72,7 +72,7 @@ do
                     if enemyRootPart then
                         -- Anchor and move mob if conditions met
                         enemyRootPart.Anchored = true
-                        enemyRootPart.CFrame = humanoidRootPart.CFrame * CFrame.new(1, 3, -5)
+                        enemyRootPart.CFrame = humanoidRootPart.CFrame * CFrame.new(1, 1, -5)
                     end
                 end
             end
@@ -309,6 +309,63 @@ ToggleMob2:OnChanged(function(Loop)
                     -- Anchor and move mob if conditions met
                     enemyRootPart.Anchored = true
                     enemyRootPart.CFrame = humanoidRootPart.CFrame * CFrame.new(1, 3, -5)
+                end
+            end
+        end
+    end
+end)
+
+-- Toggle for Mob Hit Interaction
+local ToggleMobHit2 = Tabs.MobAreas:AddToggle("Toggle Mob Hit", { Title = "Toggle Mob Hit", Default = false })
+
+ToggleMobHit2:OnChanged(function(Loop)
+    _G.enabled = Loop
+    while _G.enabled do
+        task.wait(0.25)
+
+        -- Ensure args is a valid table
+        if type(args) ~= "table" then
+            args = {}  -- Default to an empty table if args is invalid
+        end
+
+        -- Fire the remote only if it's a valid table
+        local remotes = game:GetService("ReplicatedStorage").Remotes
+        if remotes and remotes:FindFirstChild("UseItem") then
+            remotes.UseItem:FireServer(unpack(args))  -- Fire remote with unpacked args
+        end
+    end
+end)
+
+-- Toggle for Mob Kill Interaction
+local ToggleMobKill2 = Tabs.MobAreas:AddToggle("Toggle Mob Kill", { Title = "Toggle Mob Kill", Default = false })
+
+ToggleMobKill2:OnChanged(function(Loop)
+    _G.on = Loop
+    while _G.on do
+        task.wait(0.8)
+
+        local character = player.Character
+        local tool = character and character:FindFirstChildOfClass("Tool")
+        if not tool then continue end  -- Skip iteration if no tool is found
+
+        for _, enemy in pairs(game.Workspace.Enemies:GetChildren()) do
+            if string.find(enemy.Name, selectedMob2) then
+                -- Ensure args is defined and is a table
+                if type(args) ~= "table" then
+                    args = {}  -- Default to an empty table if args is invalid
+                end
+
+                -- Fire the remote only if it's a valid table
+                local remotes = game:GetService("ReplicatedStorage").Remotes
+                if remotes and remotes:FindFirstChild("UseItem") then
+                    remotes.UseItem:FireServer(unpack(args))  -- Fire remote with unpacked args
+                end
+
+                local part = enemy:FindFirstChildOfClass("Part")
+                if part then
+                    -- Simulate touching the enemy
+                    firetouchinterest(tool.Handle, part, 0)
+                    firetouchinterest(tool.Handle, part, 1)
                 end
             end
         end
