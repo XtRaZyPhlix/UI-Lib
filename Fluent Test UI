@@ -5,7 +5,7 @@ local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.
 -- Create Window
 local Window = Fluent:CreateWindow({
     Title = "Test",
-    SubTitle = "by #####222",
+    SubTitle = "by #####",
     TabWidth = 160,
     Size = UDim2.fromOffset(580, 460),
     Acrylic = true,  -- Enable blur effect (set to false to disable blur)
@@ -17,9 +17,9 @@ local Window = Fluent:CreateWindow({
 local Tabs = {
     Main = Window:AddTab({ Title = "Main", Icon = "box" }),
     MobAreas = Window:AddTab({ Title = "Mob Areas", Icon = "person-standing" }),
-    Pillar = Window:AddTab({ Title = "Elemental Pilars", Icon = "brackets" }),
+    Pillar = Window:AddTab({ Title = "Pilars", Icon = "clipboard-check" }),
     Reach = Window:AddTab({ Title = "Reach", Icon = "swords" }),
-    Gamepass = Window:AddTab({ Title = "Gamepass", Icon = "badge-dollar-sign" }),
+    Gamepass = Window:AddTab({ Title = "Gamepass", Icon = "award" }),
     Misc = Window:AddTab({ Title = "Misc", Icon = "hexagon" }),
     Settings = Window:AddTab({ Title = "Settings", Icon = "settings" })
 }
@@ -72,7 +72,7 @@ do
                     if enemyRootPart then
                         -- Anchor and move mob if conditions met
                         enemyRootPart.Anchored = true
-                        enemyRootPart.CFrame = humanoidRootPart.CFrame * CFrame.new(1, 1, -5)
+                        enemyRootPart.CFrame = humanoidRootPart.CFrame * CFrame.new(1, 3, -3)
                     end
                 end
             end
@@ -308,7 +308,7 @@ ToggleMob2:OnChanged(function(Loop)
                 if enemyRootPart then
                     -- Anchor and move mob if conditions met
                     enemyRootPart.Anchored = true
-                    enemyRootPart.CFrame = humanoidRootPart.CFrame * CFrame.new(1, 3, -5)
+                    enemyRootPart.CFrame = humanoidRootPart.CFrame * CFrame.new(1, 3, -3)
                 end
             end
         end
@@ -372,8 +372,90 @@ ToggleMobKill2:OnChanged(function(Loop)
     end
 end)
 
+--Pillar ---------------------------------------------------------------
+
+Tabs.Pillar:AddParagraph({
+    Title = "Elemental Pillars ⚡❄️🔥💧🪐🌌",
+    Content = "Lightning Elemental ⚡"
+})
+
+Tabs.Pillar:AddButton({
+    Title = "Tp to Titan Fulmen ⚡",
+    Description = "",
+    Callback = function()
+        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-329.076752, 468.891327, 1781.47424, 0.990085721, 4.06676861e-08, -0.140464619, -3.72004259e-08, 1, 2.7309909e-08, 0.140464619, -2.18138076e-08, 0.990085721)
+    end
+})
+
+
+
+Tabs.Pillar:AddParagraph({
+    Title = "Ice Elemental ❄️",
+    Content = ""
+})
+
+local ToggleTpIce = Tabs.Main:AddToggle("Toggle Titan Glacies ❄️", {Title = "Toggle Titan Glacies ❄️", Default = false })
+
+    ToggleTpIce:OnChanged(function(Loop)
+        _G.on = Loop
+        while _G.on == true do
+            task.wait(.8)
+            for _,v in pairs(game.Workspace.Enemies:GetChildren()) do
+                if string.find(v.Name, "Titan Glacies") then
+                    v:FindFirstChild("HumanoidRootPart").Anchored = true
+                    v:FindFirstChild("HumanoidRootPart").CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame * CFrame.new(1,3,-5)
+                end
+            end
+        end
+    end)
+
+local ToggleHitIce = Tabs.Main:AddToggle("Toggle Hit Titan Glacies ❄️", {Title = "Toggle Hit Titan Glacies ❄️", Default = false })
+
+    ToggleHitIce:OnChanged(function(Loop)
+        local a = game.Players.LocalPlayer.Character:FindFirstChildOfClass("Tool")
+        _G.enabled = Loop
+        while _G.enabled == true do
+            task.wait(.5)
+            for _,v in pairs(game.Workspace.Enemies:GetChildren()) do
+                if string.find(v.Name, "Titan Glacies") then
+                    game:GetService("ReplicatedStorage").Remotes.UseItem:FireServer()
+                    firetouchinterest(a.Handle, v:FindFirstChildOfClass("Part"), 0)
+                    firetouchinterest(a.Handle, v:FindFirstChildOfClass("Part"), 1)
+                end
+            end
+        end
+    end)
+
+
+
+
+
+
+
+
+--[[Tabs.Pillar:AddButton({
+    Title = "",
+    Description = "",
+    Callback = function()
+        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-329.076752, 468.891327, 1781.47424, 0.990085721, 4.06676861e-08, -0.140464619, -3.72004259e-08, 1, 2.7309909e-08, 0.140464619, -2.18138076e-08, 0.990085721)
+    end
+})]]
+
+--Reach ---------------------------------------------------------------
+
+
+
+--Gamepass ---------------------------------------------------------------
+
+
+
+--Misc ---------------------------------------------------------------
+
+
+
+
 end
---Addons ---------------------------------------------------------------
+--Settings ---------------------------------------------------------------
 
 -- Addons:
 -- SaveManager (Allows you to have a configuration system)
