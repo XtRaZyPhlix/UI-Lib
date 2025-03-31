@@ -162,19 +162,6 @@ do
         end
     end)
 
-    local Dropdown = Tabs.Main:AddDropdown("Dropdown", {
-        Title = "Dropdown",
-        Values = {"one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve", "thirteen", "fourteen"},
-        Multi = false,
-        Default = 1,
-    })
-
-    Dropdown:SetValue("four")
-
-    Dropdown:OnChanged(function(Value)
-        print("Dropdown changed:", Value)
-    end)
-
 --Mob Areas ---------------------------------------------------------------
 
 -- Areas Table: Contains the names of the areas
@@ -263,8 +250,12 @@ local areaMobs = {
 
 --------------------------------
 
-local selectedArea = "Lvl 0 Area"  -- Default selected area
-local selectedMob = "Goblin"  -- Default mob
+local selectedArea = ""  -- Default selected area
+local selectedMob = ""  -- Default mob
+
+-- Initialize the dropdown with the default area
+AreaDropdown:SetValue(selectedArea)
+MobDropdown:SetValue(selectedMob)
 
 -- Create Area Dropdown
 local AreaDropdown = Tabs.MobAreas:AddDropdown("AreaDropdown", {
@@ -295,10 +286,6 @@ local MobDropdown = Tabs.MobAreas:AddDropdown("MobDropdown", {
         selectedMob = mob  -- Update selected mob
     end
 })
-
--- Initialize the dropdown with the default area
-AreaDropdown:SetValue(selectedArea)
-MobDropdown:SetValue(selectedMob)
 
 -- Toggle for Mob Interaction
 local ToggleMob = Tabs.MobAreas:AddToggle("ToggleMob", { Title = "Toggle Mob", Default = false })
