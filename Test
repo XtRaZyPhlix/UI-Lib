@@ -5,7 +5,7 @@ local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.
 -- Create Window
 local Window = Fluent:CreateWindow({
     Title = "Test",
-    SubTitle = "by #####22",
+    SubTitle = "by #####",
     TabWidth = 160,
     Size = UDim2.fromOffset(580, 460),
     Acrylic = true,  -- Enable blur effect (set to false to disable blur)
@@ -250,39 +250,28 @@ local areaMobs = {
 
 --------------------------------
 
-local selectedArea = ""  -- Default selected area
+local selectedArea = "Lvl 0 Area"  -- Default selected area
 local selectedMob = ""  -- Default mob
 
 -- Create Area Dropdown
 local AreaDropdown = Tabs.MobAreas:AddDropdown("AreaDropdown", {
     Title = "Area",
-    Values = areas,  -- Example areas
+    Values = areas,  -- All available areas
     Multi = false,
     Default = "Select Area",
 })
 
-----------------------------------
-
 -- Create Mob Dropdown
 local MobDropdown = Tabs.MobAreas:AddDropdown("MobDropdown", {
     Title = "Mob Spawns",
-    Values = areaMobs[selectedArea],  -- Populate with mobs from the selected area
+    Values = areaMobs[selectedArea],  -- Default mobs based on the selected area
     Multi = true,
     Default = "Select Mob",
 })
 
 -- Listen for mob selection and update the selected mob
 MobDropdown:OnChanged(function(mobName)
-    selectedMob = mobName
-end)
-
--- Listen for area changes and update the selected area and mob dropdown
-AreaDropdown:OnChanged(function(area)
-    selectedArea = area  -- Update selected area
-    local mobsForArea = areaMobs[selectedArea]  -- Get mobs for the selected area
-    
-    -- Update MobDropdown values based on selected area
-    MobDropdown:SetValue(mobsForArea)
+    selectedMob = mobName  -- Update selected mob
 end)
 
 -- Listen for area changes and update the selected area and mob dropdown
@@ -297,9 +286,9 @@ AreaDropdown:OnChanged(function(area)
     MobDropdown:SetValue(mobsForArea[1])  -- Select the first mob by default
 end)
 
--- Initialize the dropdown with the default area
+-- Initialize the dropdown with the default area and mob
 AreaDropdown:SetValue(selectedArea)
-MobDropdown:SetValue(selectedMob)
+MobDropdown:SetValue(areaMobs[selectedArea][1])
 
 -- Toggle for Mob Interaction
 local ToggleMob = Tabs.MobAreas:AddToggle("ToggleMob", { Title = "Toggle Mob", Default = false })
