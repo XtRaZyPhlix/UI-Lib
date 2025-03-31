@@ -5,7 +5,7 @@ local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.
 -- Create Window
 local Window = Fluent:CreateWindow({
     Title = "Test",
-    SubTitle = "by #####",
+    SubTitle = "by #####2",
     TabWidth = 160,
     Size = UDim2.fromOffset(580, 460),
     Acrylic = true,  -- Enable blur effect (set to false to disable blur)
@@ -303,7 +303,7 @@ ToggleMob2:OnChanged(function(Loop)
 
         -- Loop through enemies and find matching mobs
         for _, enemy in pairs(game.Workspace.Enemies:GetChildren()) do
-            if string.find(enemy.Name, mobName) then
+            if string.find(enemy.Name, selectedMob2) then
                 local enemyRootPart = enemy:FindFirstChild("HumanoidRootPart")
                 if enemyRootPart then
                     -- Anchor and move mob if conditions met
@@ -349,7 +349,7 @@ ToggleMobKill2:OnChanged(function(Loop)
         if not tool then continue end  -- Skip iteration if no tool is found
 
         for _, enemy in pairs(game.Workspace.Enemies:GetChildren()) do
-            if string.find(enemy.Name, mobName) then
+            if string.find(enemy.Name, selectedMob2) then
                 -- Ensure args is defined and is a table
                 if type(args) ~= "table" then
                     args = {}  -- Default to an empty table if args is invalid
