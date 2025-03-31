@@ -5,7 +5,7 @@ local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.
 -- Create Window
 local Window = Fluent:CreateWindow({
     Title = "Test",
-    SubTitle = "by #####44",
+    SubTitle = "by #####5",
     TabWidth = 160,
     Size = UDim2.fromOffset(580, 460),
     Acrylic = true,  -- Enable blur effect (set to false to disable blur)
@@ -515,10 +515,77 @@ Tabs.Pillar:AddParagraph({
     Content = ""
 })
 
+-- Create Mob Dropdown
+local ChooseMob = Tabs.Pillar:AddDropdown("Choose Mob 🪐", {
+    Title = "Mob Spawns",
+    Values = {"Titan Solis", "Flare"},  -- Default mobs based on the selected area
+    Multi = true,
+    Default = "Select Mob",
+})
+
+-- Listen for mob selection and update the selected mob
+MobDropdown:OnChanged(function(Values)
+    CMobSpawn1 = Values
+end)
+
+local ToggleFire = Tabs.Pillar:AddToggle("Toggle Solis/Flare 🪐", { Title = "Toggle Solis/Flare 🪐", Default = false })
+ToggleFire:OnChanged(function(Loop)
+    local a = game.Players.LocalPlayer.Character:FindFirstChildOfClass("Tool")
+        _G.enabled = Loop
+        while _G.enabled == true do
+            task.wait(.25)
+            for _,v in pairs(game.Workspace.Enemies:GetChildren()) do
+                if string.find(v.Name, CMobSpawn1) then
+                    game:GetService("ReplicatedStorage").Remotes.UseItem:FireServer()
+                    firetouchinterest(a.Handle, v:FindFirstChildOfClass("Part"), 0)
+                    firetouchinterest(a.Handle, v:FindFirstChildOfClass("Part"), 1)
+                end
+            end
+        end
+end)
+
+Tabs.Pillar:AddButton({
+    Title = "Tp to Flares 🪐",
+    Callback = function()
+        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(895.248596, 321.131317, 2392.60742, 0.99999994, -6.26771246e-10, -0.000354468561, 5.76313275e-10, 1, -1.4234827e-07, 0.000354468561, 1.42348057e-07, 0.99999994)
+    end
+})
+
+-- Create Mob Dropdown
+local ChooseMob = Tabs.Pillar:AddDropdown("Choose Mob 🪐", {
+    Title = "Mob Hits",
+    Values = {"Titan Solis", "Flare"},  -- Default mobs based on the selected area
+    Multi = true,
+    Default = "Select Mob",
+})
+
+-- Listen for mob selection and update the selected mob
+MobDropdown:OnChanged(function(Values)
+    CMob1 = Values
+end)
+
+local ToggleHitFire = Tabs.Pillar:AddToggle("Toggle Hit Solis/Flare 🪐", { Title = "Toggle Hit Solis/Flare 🪐", Default = false })
+ToggleHitFire:OnChanged(function(Loop)
+    local a = game.Players.LocalPlayer.Character:FindFirstChildOfClass("Tool")
+        _G.enabled = Loop
+        while _G.enabled == true do
+            task.wait(.25)
+            for _,v in pairs(game.Workspace.Enemies:GetChildren()) do
+                if string.find(v.Name, CMob1) then
+                    game:GetService("ReplicatedStorage").Remotes.UseItem:FireServer()
+                    firetouchinterest(a.Handle, v:FindFirstChildOfClass("Part"), 0)
+                    firetouchinterest(a.Handle, v:FindFirstChildOfClass("Part"), 1)
+                end
+            end
+        end
+end)
+
+--[[
 local ToggleHitSolar = Tabs.Pillar:AddToggle("Toggle Hit Titan Solis 🪐", { Title = "Toggle Hit Titan Solis 🪐", Default = false })
 handleToggle(ToggleHitSolar, "Titan Solis", function(v)
     attackEnemy(game.Players.LocalPlayer.Character:FindFirstChildOfClass("Tool"), v)
 end)
+]]
 
 -- Plasma Elemental
 Tabs.Pillar:AddParagraph({
@@ -526,9 +593,33 @@ Tabs.Pillar:AddParagraph({
     Content = ""
 })
 
-local ToggleHitPlasma = Tabs.Pillar:AddToggle("Toggle Titans 🌌", { Title = "Toggle Titans 🌌", Default = false })
-handleToggle(ToggleHitPlasma, "Titan", function(v)
-    setEnemyCFrame(v, game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame * CFrame.new(1, 3, -5))
+-- Create Mob Dropdown
+local ChooseMob = Tabs.Pillar:AddDropdown("Choose Mob 🌌", {
+    Title = "Choose Mob",
+    Values = {"Mother of Chaos", "Aureum Statera", "ElementalPillar"},  -- Default mobs based on the selected area
+    Multi = true,
+    Default = "Select Mob",
+})
+
+-- Listen for mob selection and update the selected mob
+MobDropdown:OnChanged(function(Values)
+    CMob2 = Values
+end)
+
+local ToggleHitFire = Tabs.Pillar:AddToggle("Toggle Hit Titan 🌌", { Title = "Toggle Hit Titan 🌌", Default = false })
+ToggleHitFire:OnChanged(function(Loop)
+    local a = game.Players.LocalPlayer.Character:FindFirstChildOfClass("Tool")
+        _G.enabled = Loop
+        while _G.enabled == true do
+            task.wait(.25)
+            for _,v in pairs(game.Workspace.Enemies:GetChildren()) do
+                if string.find(v.Name, CMob2) then
+                    game:GetService("ReplicatedStorage").Remotes.UseItem:FireServer()
+                    firetouchinterest(a.Handle, v:FindFirstChildOfClass("Part"), 0)
+                    firetouchinterest(a.Handle, v:FindFirstChildOfClass("Part"), 1)
+                end
+            end
+        end
 end)
 
 -- Reach ---------------------------------------------------------------
@@ -636,7 +727,7 @@ local function createGamepassButton(name, id)
 end
 
 -- Create Gamepass buttons
-createGamepassButton("Quick Travel")
+createGamepassButton("QuickTravel")
 createGamepassButton("Teleportation")
 createGamepassButton("VIP")
 createGamepassButton("Double XP")
