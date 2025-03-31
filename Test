@@ -5,7 +5,7 @@ local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.
 -- Create Window
 local Window = Fluent:CreateWindow({
     Title = "Test",
-    SubTitle = "by #####3",
+    SubTitle = "by #####",
     TabWidth = 160,
     Size = UDim2.fromOffset(580, 460),
     Acrylic = true,  -- Enable blur effect (set to false to disable blur)
@@ -433,7 +433,7 @@ local ToggleHitIce = Tabs.Pillar:AddToggle("Toggle Hit Titan Glacies ❄️", {T
 
 local ToggleHitFire = Tabs.Pillar:AddToggle("Auto Attack 🔥 (Wait 5-7 Seconds)", {Title = "Auto Attack 🔥 (Wait 5-7 Seconds)", Default = false })
 
-    ToggleHitIce:OnChanged(function(Loop)
+    ToggleHitFire:OnChanged(function(Loop)
         local a = game.Players.LocalPlayer.Character:FindFirstChildOfClass("Tool")
         _G.attack = Loop
         while _G.attack do
@@ -453,9 +453,9 @@ local ToggleHitFire = Tabs.Pillar:AddToggle("Auto Attack 🔥 (Wait 5-7 Seconds)
         Content = ""
     })
 
-local ToggleHitWater = Tabs.Pillar:AddToggle("Toggle Water Orbs 💧", {Title = "Toggle Water Orbs 💧", Default = false })
+local ToggleWater = Tabs.Pillar:AddToggle("Toggle Water Orbs 💧", {Title = "Toggle Water Orbs 💧", Default = false })
 
-    ToggleHitWater:OnChanged(function(Loop)
+    ToggleWater:OnChanged(function(Loop)
         Orb = game:GetService("Workspace").WaterOrbs.Orb
         Chara = game.Players.LocalPlayer.Character
         basepart = Chara:FindFirstChildWhichIsA("BasePart")
@@ -500,9 +500,9 @@ local ToggleHitSolar = Tabs.Pillar:AddToggle("Toggle Titan Solis 🪐", {Title =
         end
     })
 
-local ToggleHitSolar = Tabs.Pillar:AddToggle("Toggle Hit Titan Solis 🪐", {Title = "Toggle Hit Titan Solis 🪐", Default = false })
+local ToggleHitSolar2 = Tabs.Pillar:AddToggle("Toggle Hit Titan Solis 🪐", {Title = "Toggle Hit Titan Solis 🪐", Default = false })
 
-    ToggleHitSolar:OnChanged(function(Loop)
+    ToggleHitSolar2:OnChanged(function(Loop)
         local a = game.Players.LocalPlayer.Character:FindFirstChildOfClass("Tool")
         _G.enabled = Loop
         while _G.enabled == true do
@@ -517,9 +517,9 @@ local ToggleHitSolar = Tabs.Pillar:AddToggle("Toggle Hit Titan Solis 🪐", {Tit
         end
     end)
 
-local ToggleHitSolar = Tabs.Pillar:AddToggle("Toggle Hit Flares 🪐", {Title = "Toggle Hit Flares 🪐", Default = false })
+local ToggleHitSolar3 = Tabs.Pillar:AddToggle("Toggle Hit Flares 🪐", {Title = "Toggle Hit Flares 🪐", Default = false })
 
-    ToggleHitSolar:OnChanged(function(Loop)
+    ToggleHitSolar3:OnChanged(function(Loop)
         local a = game.Players.LocalPlayer.Character:FindFirstChildOfClass("Tool")
         _G.enabled = Loop
         while _G.enabled == true do
@@ -562,9 +562,9 @@ local ToggleHitPlasma = Tabs.Pillar:AddToggle("Toggle Titans 🌌", {Title = "To
         end
     })
 
-local ToggleHitPlasma = Tabs.Pillar:AddToggle("Toggle Mother of Chaos 🌌", {Title = "Toggle Mother of Chaos 🌌", Default = false })
+local ToggleHitPlasma2 = Tabs.Pillar:AddToggle("Toggle Mother of Chaos 🌌", {Title = "Toggle Mother of Chaos 🌌", Default = false })
 
-    ToggleHitPlasma:OnChanged(function(Loop)
+    ToggleHitPlasma2:OnChanged(function(Loop)
         _G.on = Loop
         while _G.on == true do
             task.wait(.8)
@@ -577,9 +577,9 @@ local ToggleHitPlasma = Tabs.Pillar:AddToggle("Toggle Mother of Chaos 🌌", {Ti
         end
     end)
 
-local ToggleHitPlasma = Tabs.Pillar:AddToggle("Toggle Hit Mother of Chaos 🌌", {Title = "Toggle Hit Mother of Chaos 🌌", Default = false })
+local ToggleHitPlasma3 = Tabs.Pillar:AddToggle("Toggle Hit Mother of Chaos 🌌", {Title = "Toggle Hit Mother of Chaos 🌌", Default = false })
 
-    ToggleHitPlasma:OnChanged(function(Loop)
+    ToggleHitPlasma3:OnChanged(function(Loop)
         local a = game.Players.LocalPlayer.Character:FindFirstChildOfClass("Tool")
         _G.enabled = Loop
         while _G.enabled == true do
@@ -594,9 +594,9 @@ local ToggleHitPlasma = Tabs.Pillar:AddToggle("Toggle Hit Mother of Chaos 🌌",
         end
     end)
     
-local ToggleHitPlasma = Tabs.Pillar:AddToggle("Toggle Hit Aureum Statera 🌌", {Title = "Toggle Hit Aureum Statera 🌌", Default = false })
+local ToggleHitPlasma4 = Tabs.Pillar:AddToggle("Toggle Hit Aureum Statera 🌌", {Title = "Toggle Hit Aureum Statera 🌌", Default = false })
 
-    ToggleHitPlasma:OnChanged(function(Loop)
+    ToggleHitPlasma4:OnChanged(function(Loop)
         local a = game.Players.LocalPlayer.Character:FindFirstChildOfClass("Tool")
         _G.enabled = Loop
         while _G.enabled == true do
@@ -611,9 +611,9 @@ local ToggleHitPlasma = Tabs.Pillar:AddToggle("Toggle Hit Aureum Statera 🌌", 
         end
     end)
 
-local ToggleHitPlasma = Tabs.Pillar:AddToggle("Toggle Hit Elemental Pillars 🌌", {Title = "Toggle Hit Elemental Pillars 🌌", Default = false })
+local ToggleHitPlasma5 = Tabs.Pillar:AddToggle("Toggle Hit Elemental Pillars 🌌", {Title = "Toggle Hit Elemental Pillars 🌌", Default = false })
 
-    ToggleHitPlasma:OnChanged(function(Loop)
+    ToggleHitPlasma5:OnChanged(function(Loop)
         local a = game.Players.LocalPlayer.Character:FindFirstChildOfClass("Tool")
         _G.enabled = Loop
         while _G.enabled == true do
