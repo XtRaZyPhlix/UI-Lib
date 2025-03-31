@@ -5,7 +5,7 @@ local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.
 -- Create Window
 local Window = Fluent:CreateWindow({
     Title = "Test",
-    SubTitle = "by #####",
+    SubTitle = "by #####re",
     TabWidth = 160,
     Size = UDim2.fromOffset(580, 460),
     Acrylic = true,  -- Enable blur effect (set to false to disable blur)
@@ -251,7 +251,7 @@ local areaMobs = {
 --------------------------------
 
 local selectedArea = "Lvl 0 Area"  -- Default selected area
-local selectedMob2 = ""  -- Default mob
+local selectedMob2 = "Choose Mob"  -- Default mob
 
 -- Create Area Dropdown
 local AreaDropdown = Tabs.MobAreas:AddDropdown("AreaDropdown", {
@@ -265,7 +265,7 @@ local AreaDropdown = Tabs.MobAreas:AddDropdown("AreaDropdown", {
 local MobDropdown = Tabs.MobAreas:AddDropdown("MobDropdown", {
     Title = "Mob Spawns",
     Description = "",
-    Values = areaMobs[selectedArea] or {},  -- Default mobs based on the selected area
+    Values = areaMobs[selectedArea],  -- Default mobs based on the selected area
     Multi = true,
     Default = {"Select Mob"},
 })
@@ -281,7 +281,7 @@ AreaDropdown:OnChanged(function(area)
     local mobsForArea = areaMobs[selectedArea]  -- Get mobs for the selected area
     
     -- Update MobDropdown values based on selected area
-    MobDropdown:SetValues(mobsForArea or {})
+    MobDropdown:SetValues(mobsForArea)
 end)
 
 -- Toggle for Mob Interaction
@@ -304,7 +304,7 @@ ToggleMob2:OnChanged(function(Loop)
 
         -- Loop through enemies and find matching mobs
         for _, enemy in pairs(game.Workspace.Enemies:GetChildren()) do
-            if string.find(enemy.Name, selectedMob2) then
+            if string.find(enemy.Name, [selectedMob2]) then
                 local enemyRootPart = enemy:FindFirstChild("HumanoidRootPart")
                 if enemyRootPart then
                     -- Anchor and move mob if conditions met
@@ -345,12 +345,12 @@ ToggleMobKill2:OnChanged(function(Loop)
     while _G.on do
         task.wait(0.25)
 
-        local character = game.Players.LocalPlayer.Character
+        local character = player.Character
         local tool = character and character:FindFirstChildOfClass("Tool")
         if not tool then continue end  -- Skip iteration if no tool is found
 
         for _, enemy in pairs(game.Workspace.Enemies:GetChildren()) do
-            if string.find(enemy.Name, selectedMob2) then
+            if string.find(enemy.Name, {selectedMob2}) then
                 -- Ensure args is defined and is a table
                 if type(args) ~= "table" then
                     args = {}  -- Default to an empty table if args is invalid
