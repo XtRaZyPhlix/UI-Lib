@@ -253,10 +253,6 @@ local areaMobs = {
 local selectedArea = ""  -- Default selected area
 local selectedMob = ""  -- Default mob
 
--- Initialize the dropdown with the default area
-AreaDropdown:SetValue(selectedArea)
-MobDropdown:SetValue(selectedMob)
-
 -- Create Area Dropdown
 local AreaDropdown = Tabs.MobAreas:AddDropdown("AreaDropdown", {
     Title = "Area",
@@ -286,6 +282,10 @@ local MobDropdown = Tabs.MobAreas:AddDropdown("MobDropdown", {
         selectedMob = mob  -- Update selected mob
     end
 })
+
+-- Initialize the dropdown with the default area
+AreaDropdown:SetValue(selectedArea)
+MobDropdown:SetValue(selectedMob)
 
 -- Toggle for Mob Interaction
 local ToggleMob = Tabs.MobAreas:AddToggle("ToggleMob", { Title = "Toggle Mob", Default = false })
