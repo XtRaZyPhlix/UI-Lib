@@ -469,24 +469,45 @@ Tabs.Pillar:AddParagraph({
     Content = ""
 })
 
-local ToggleWater = Tabs.Pillar:AddToggle("Toggle Water Orbs 💧", {Title = "Toggle Water Orbs 💧", Default = false })
+local ToggleWater = Tabs.Pillar:AddToggle("Toggle Water Orbs 💧", {Title = "Toggle Water Orbs 💧", Default = false})
 
-    ToggleWater:OnChanged(function(Loop)
-        local Orb = game:GetService("Workspace").WaterOrbs.Orb
-        local Chara = game.Players.LocalPlayer.Character
-        local basepart = Chara:FindFirstChildWhichIsA("BasePart")
-        local Count = 0
-        --Script
-        _G.Orbs = Loop
-        while _G.Orbs == true do
+ToggleWater:OnChanged(function(Loop)
+    local WaterOrbs = game:GetService("Workspace"):FindFirstChild("WaterOrbs")
+    
+    if not WaterOrbs then
+        -- If there are no water orbs, exit the function
+        return
+    end
+
+    local Orb = WaterOrbs:FindFirstChild("Orb")
+    if not Orb then
+        -- If no Orb exists under WaterOrbs, exit the function
+        return
+    end
+
+    local Chara = game.Players.LocalPlayer.Character
+    local basepart = Chara:FindFirstChildWhichIsA("BasePart")
+    if not basepart then
+        -- If the character's base part isn't found, exit the function
+        return
+    end
+
+    local Count = 0
+    _G.Orbs = Loop
+
+    while _G.Orbs do
+        -- Only proceed if the orb is valid
+        if Orb and basepart then
             repeat
-            wait (.25)
-            firetouchinterest(Orb,basepart,0)
-            firetouchinterest(Orb,basepart,1)
-            Count = Count + 1
+                wait(0.25)
+                firetouchinterest(Orb, basepart, 0)
+                firetouchinterest(Orb, basepart, 1)
+                Count = Count + 1
             until Count == 20
         end
-    end)
+    end
+end)
+
 
 -- Solar Elemental
 Tabs.Pillar:AddParagraph({
@@ -510,25 +531,155 @@ handleToggle(ToggleHitPlasma, "Titan", function(v)
     setEnemyCFrame(v, game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame * CFrame.new(1, 3, -5))
 end)
 
--- Reach Adjustment (e.g., Sword Reach)
-local XValue = Tabs.Reach:AddSlider("X Value", { Title = "X Value", Min = 1, Max = 2048, Default = 1, Callback = function(Value) X = Value end })
-local YValue = Tabs.Reach:AddSlider("Y Value", { Title = "Y Value", Min = 1, Max = 2048, Default = 1, Callback = function(Value) Y = Value end })
-local ZValue = Tabs.Reach:AddSlider("Z Value", { Title = "Z Value", Min = 1, Max = 2048, Default = 1, Callback = function(Value) Z = Value end })
+--Reach ---------------------------------------------------------------
+
+local XValue = Tabs.Reach:AddSlider("X Value", {
+    Title = "X Value",
+    Description = "",
+    Default = 1,
+    Min = 1,
+    Max = 2048,
+    Rounding = 1,
+    Callback = function(Value)
+        X = Value
+    end
+})
+
+local YValue = Tabs.Reach:AddSlider("Y Value", {
+    Title = "Y Value",
+    Description = "",
+    Default = 1,
+    Min = 1,
+    Max = 2048,
+    Rounding = 1,
+    Callback = function(Value)
+        Y = Value
+    end
+})
+
+local ZValue = Tabs.Reach:AddSlider("Z Value", {
+    Title = "Z Value",
+    Description = "",
+    Default = 1,
+    Min = 1,
+    Max = 2048,
+    Rounding = 1,
+    Callback = function(Value)
+        Z = Value
+    end
+})
 
 Tabs.Reach:AddButton({
     Title = "Apply Sword Reach ⚔️",
+    Description = "",
     Callback = function()
-        local plr = game:GetService("Players").LocalPlayer
-        for _, tool in pairs(plr.Character:GetDescendants()) do
-            if tool:IsA("Tool") then
-                tool.Handle.Size = Vector3.new(X, Y, Z)
-                tool.Handle.Massless = true
-                tool.Handle.CanCollide = false
-                tool.Handle.Transparency = 1
-                tool.GripPos = Vector3.new(0, 0, 0)
+        Players = game:GetService("Players")
+        local plr = Players.LocalPlayer
+
+        for i,v in pairs(plr.Character:GetDescendants()) do
+            if v:IsA("Tool") then
+                currentToolSize = v.Handle.Size
+                currentGripPos = v.GripPos
+                local a = Instance.new("SelectionBox")
+                a.Name = "SelectionBoxCreated"
+                a.Parent = v.Handle
+                a.Adornee = v.Handle
+                v.Handle.Massless = true
+                v.Handle.CanCollide = false
+                v.Handle.Transparency = 1
+                v.Handle.Size = Vector3.new(X,Y,Z)
+                v.GripPos = Vector3.new(0,0,0)
                 plr.Character.Humanoid:UnequipTools()
             end
         end
+})
+
+local ToggleHit = Tabs.Reach:AddToggle("Toggle Hit", {Title = "Toggle Hit", Default = false })
+
+    ToggleHit:OnChanged(function(Loop)
+        _G.enabled = Loop
+        while _G.enabled == true do
+            wait(0.25) do
+                game:GetService("ReplicatedStorage").Remotes.UseItem:FireServer()
+            end
+        end
+    end)
+
+--Gamepass ---------------------------------------------------------------
+
+Tabs.Gamepass:AddButton({
+    Title = "Quick Travel",
+    Description = "",
+    Callback = function()
+        local parte = Instance.new("Model")
+        parte.Parent = game:GetService("Players").LocalPlayer
+        parte.Name = "QuickTravel"
+    end
+})
+
+Tabs.Gamepass:AddButton({
+    Title = "Teleportation",
+    Description = "",
+    Callback = function()
+        local parte = Instance.new("Model")
+        parte.Parent = game:GetService("Players").LocalPlayer
+        parte.Name = "Teleportation"
+    end
+})
+
+Tabs.Gamepass:AddButton({
+    Title = "VIP",
+    Description = "",
+    Callback = function()
+        local parte = Instance.new("Model")
+        parte.Parent = game:GetService("Players").LocalPlayer
+        parte.Name = "VIP"  
+    end
+})
+
+Tabs.Gamepass:AddButton({
+    Title = "Double XP",
+    Description = "",
+    Callback = function()
+        local parte = Instance.new("Model")
+        parte.Parent = game:GetService("Players").LocalPlayer
+        parte.Name = "DoubleXP"
+    end
+})
+
+Tabs.Gamepass:AddButton({
+    Title = "Admin",
+    Description = "",
+    Callback = function()
+        local parte = Instance.new("Model")
+        parte.Parent = game:GetService("Players").LocalPlayer
+        parte.Name = "IsAdmin"
+
+        game:GetService("Players").LocalPlayer.PlayerID = 239345228
+    end
+})
+
+Tabs.Gamepass:AddButton({
+    Title = "Overseer",
+    Description = "",
+    Callback = function()
+        local parte = Instance.new("Model")
+        parte.Parent = game:GetService("Players").LocalPlayer
+        parte.Name = "IsOverseer"
+
+        game:GetService("Players").LocalPlayer.PlayerID = 360470140
+    end
+})
+
+Tabs.Gamepass:AddButton({
+    Title = "Developer",
+    Description = "",
+    Callback = function()
+        local parte = Instance.new("Model")
+        parte.Parent = game:GetService("Players").LocalPlayer
+        parte.Name = "IsDeveloper"
+
+        game:GetService("Players").LocalPlayer.PlayerID = 65001136
     end
 })
 
