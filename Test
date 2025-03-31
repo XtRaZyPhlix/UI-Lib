@@ -5,7 +5,7 @@ local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.
 -- Create Window
 local Window = Fluent:CreateWindow({
     Title = "Test",
-    SubTitle = "by #####",
+    SubTitle = "by #####22",
     TabWidth = 160,
     Size = UDim2.fromOffset(580, 460),
     Acrylic = true,  -- Enable blur effect (set to false to disable blur)
@@ -281,9 +281,6 @@ AreaDropdown:OnChanged(function(area)
     
     -- Update MobDropdown values based on selected area
     MobDropdown:SetValues(mobsForArea)
-    
-    -- Optionally, reset the mob dropdown selection if needed
-    MobDropdown:SetValue(mobsForArea[1])  -- Select the first mob by default
 end)
 
 -- Initialize the dropdown with the default area and mob
