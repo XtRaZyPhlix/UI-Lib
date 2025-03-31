@@ -261,15 +261,6 @@ local AreaDropdown = Tabs.MobAreas:AddDropdown("AreaDropdown", {
     Default = "Select Area",
 })
 
--- Listen for area changes and update the selected area and mob dropdown
-AreaDropdown:OnChanged(function(area)
-    selectedArea = area  -- Update selected area
-    local mobsForArea = areaMobs[selectedArea]  -- Get mobs for the selected area
-    
-    -- Update MobDropdown values based on selected area
-    MobDropdown:SetValue(mobsForArea)
-end)
-
 ----------------------------------
 
 -- Create Mob Dropdown
@@ -283,6 +274,15 @@ local MobDropdown = Tabs.MobAreas:AddDropdown("MobDropdown", {
 -- Listen for mob selection and update the selected mob
 MobDropdown:OnChanged(function(mobName)
     selectedMob = mobName
+end)
+
+-- Listen for area changes and update the selected area and mob dropdown
+AreaDropdown:OnChanged(function(area)
+    selectedArea = area  -- Update selected area
+    local mobsForArea = areaMobs[selectedArea]  -- Get mobs for the selected area
+    
+    -- Update MobDropdown values based on selected area
+    MobDropdown:SetValue(mobsForArea)
 end)
 
 -- Toggle for Mob Interaction
