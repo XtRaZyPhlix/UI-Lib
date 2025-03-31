@@ -5,7 +5,7 @@ local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.
 -- Create Window
 local Window = Fluent:CreateWindow({
     Title = "Test",
-    SubTitle = "by #####2",
+    SubTitle = "by #####",
     TabWidth = 160,
     Size = UDim2.fromOffset(580, 460),
     Acrylic = true,  -- Enable blur effect (set to false to disable blur)
@@ -415,7 +415,7 @@ local ToggleHitIce = Tabs.Pillar:AddToggle("Toggle Hit Titan Glacies ❄️", {T
         local a = game.Players.LocalPlayer.Character:FindFirstChildOfClass("Tool")
         _G.enabled = Loop
         while _G.enabled == true do
-            task.wait(.5)
+            task.wait(.25)
             for _,v in pairs(game.Workspace.Enemies:GetChildren()) do
                 if string.find(v.Name, "Titan Glacies") then
                     game:GetService("ReplicatedStorage").Remotes.UseItem:FireServer()
@@ -426,32 +426,411 @@ local ToggleHitIce = Tabs.Pillar:AddToggle("Toggle Hit Titan Glacies ❄️", {T
         end
     end)
 
+    Tabs.Pillar:AddParagraph({
+        Title = "Fire Elemental 🔥",
+        Content = ""
+    })
 
+local ToggleHitFire = Tabs.Pillar:AddToggle("Auto Attack 🔥 (Wait 5-7 Seconds)", {Title = "Auto Attack 🔥 (Wait 5-7 Seconds)", Default = false })
 
+    ToggleHitFire:OnChanged(function(Loop)
+        local a = game.Players.LocalPlayer.Character:FindFirstChildOfClass("Tool")
+        _G.attack = Loop
+        while _G.attack do
+            wait(.25)
+            for i,v in pairs(game.Workspace.Enemies:GetChildren()) do
+                if v:FindFirstChild("Human") then
+                    game:GetService("ReplicatedStorage").Remotes.UseItem:FireServer()
+                    firetouchinterest(a.Handle, v:FindFirstChildOfClass("Part"), 0)
+                    firetouchinterest(a.Handle, v:FindFirstChildOfClass("Part"), 1)
+                end
+            end
+        end
+    end)
 
+    Tabs.Pillar:AddParagraph({
+        Title = "Water Elemental 💧",
+        Content = ""
+    })
 
+local ToggleWater = Tabs.Pillar:AddToggle("Toggle Water Orbs 💧", {Title = "Toggle Water Orbs 💧", Default = false })
 
+    ToggleWater:OnChanged(function(Loop)
+        Orb = game:GetService("Workspace").WaterOrbs.Orb
+        Chara = game.Players.LocalPlayer.Character
+        basepart = Chara:FindFirstChildWhichIsA("BasePart")
+        Count = 0
+        --Script
+        _G.Orbs = Loop
+        while _G.Orbs == true do
+            repeat
+            wait (.25)
+            firetouchinterest(Orb,basepart,0)
+            firetouchinterest(Orb,basepart,1)
+            Count = Count + 1
+            until Count == 20
+        end
+    end)
 
+    Tabs.Pillar:AddParagraph({
+        Title = "Solar Elemental 🪐",
+        Content = ""
+    })
 
---[[Tabs.Pillar:AddButton({
+local ToggleHitSolar = Tabs.Pillar:AddToggle("Toggle Titan Solis 🪐", {Title = "Toggle Titan Solis 🪐", Default = false })
+
+    ToggleHitSolar:OnChanged(function(Loop)
+        _G.on = Loop
+        while _G.on == true do
+            task.wait(.8)
+            for _,v in pairs(game.Workspace.Enemies:GetChildren()) do
+                if string.find(v.Name, "Titan Solis") then
+                    v:FindFirstChild("HumanoidRootPart").Anchored = true
+                    v:FindFirstChild("HumanoidRootPart").CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame * CFrame.new(1,3,-5)
+                end
+            end
+        end
+    end)
+
+    Tabs.Pillar:AddButton({
+        Title = "Tp to Flares 🪐",
+        Description = "",
+        Callback = function()
+            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(895.248596, 321.131317, 2392.60742, 0.99999994, -6.26771246e-10, -0.000354468561, 5.76313275e-10, 1, -1.4234827e-07, 0.000354468561, 1.42348057e-07, 0.99999994)
+        end
+    })
+
+local ToggleHitSolar2 = Tabs.Pillar:AddToggle("Toggle Hit Titan Solis 🪐", {Title = "Toggle Hit Titan Solis 🪐", Default = false })
+
+    ToggleHitSolar2:OnChanged(function(Loop)
+        local a = game.Players.LocalPlayer.Character:FindFirstChildOfClass("Tool")
+        _G.enabled = Loop
+        while _G.enabled == true do
+            task.wait(.25)
+            for _,v in pairs(game.Workspace.Enemies:GetChildren()) do
+                if string.find(v.Name, "Titan Solis") then
+                    game:GetService("ReplicatedStorage").Remotes.UseItem:FireServer()
+                    firetouchinterest(a.Handle, v:FindFirstChildOfClass("Part"), 0)
+                    firetouchinterest(a.Handle, v:FindFirstChildOfClass("Part"), 1)
+                end
+            end
+        end
+    end)
+
+local ToggleHitSolar3 = Tabs.Pillar:AddToggle("Toggle Hit Flares 🪐", {Title = "Toggle Hit Flares 🪐", Default = false })
+
+    ToggleHitSolar3:OnChanged(function(Loop)
+        local a = game.Players.LocalPlayer.Character:FindFirstChildOfClass("Tool")
+        _G.enabled = Loop
+        while _G.enabled == true do
+            task.wait(.25)
+            for _,v in pairs(game.Workspace.Enemies:GetDescendants()) do
+                if string.find(v.Name, "Flare") then
+                    game:GetService("ReplicatedStorage").Remotes.UseItem:FireServer()
+                    firetouchinterest(a.Handle, v:FindFirstChildOfClass("Part"), 0)
+                    firetouchinterest(a.Handle, v:FindFirstChildOfClass("Part"), 1)
+                end
+            end
+        end
+    end)
+    
+    Tabs.Pillar:AddParagraph({
+        Title = "Plasma Elemental 🌌",
+        Content = ""
+    })
+
+local ToggleHitPlasma = Tabs.Pillar:AddToggle("Toggle Titans 🌌", {Title = "Toggle Titans 🌌", Default = false })
+
+    ToggleHitPlasma:OnChanged(function(Loop)
+        _G.on = Loop
+        while _G.on == true do
+            task.wait(.8)
+            for _,v in pairs(game.Workspace.Enemies:GetChildren()) do
+                if string.find(v.Name, "Titan") then
+                    v:FindFirstChild("HumanoidRootPart").Anchored = true
+                    v:FindFirstChild("HumanoidRootPart").CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame * CFrame.new(1,3,-5)
+                end
+            end
+        end
+    end)
+
+    Tabs.Pillar:AddButton({
+        Title = "Tp to Mother of Chaos 🌌",
+        Description = "",
+        Callback = function()
+            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-6199.5874, 106.824211, -40.1784744, -0.0218606181, -1.14025532e-07, 0.999761045, -5.28366968e-08, 1, 1.12897467e-07, -0.999761045, -5.03560642e-08, -0.0218606181)
+        end
+    })
+
+local ToggleHitPlasma2 = Tabs.Pillar:AddToggle("Toggle Mother of Chaos 🌌", {Title = "Toggle Mother of Chaos 🌌", Default = false })
+
+    ToggleHitPlasma2:OnChanged(function(Loop)
+        _G.on = Loop
+        while _G.on == true do
+            task.wait(.8)
+            for _,v in pairs(game.Workspace.Enemies:GetChildren()) do
+                if string.find(v.Name, "Mother of Chaos") then
+                    v:FindFirstChild("HumanoidRootPart").Anchored = true
+                    v:FindFirstChild("HumanoidRootPart").CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame * CFrame.new(1,3,-5)
+                end
+            end
+        end
+    end)
+
+local ToggleHitPlasma3 = Tabs.Pillar:AddToggle("Toggle Hit Mother of Chaos 🌌", {Title = "Toggle Hit Mother of Chaos 🌌", Default = false })
+
+    ToggleHitPlasma3:OnChanged(function(Loop)
+        local a = game.Players.LocalPlayer.Character:FindFirstChildOfClass("Tool")
+        _G.enabled = Loop
+        while _G.enabled == true do
+            task.wait(.25)
+            for _,v in pairs(game.Workspace.Enemies:GetChildren()) do
+                if string.find(v.Name, "Mother of Chaos") then
+                    game:GetService("ReplicatedStorage").Remotes.UseItem:FireServer()
+                    firetouchinterest(a.Handle, v:FindFirstChildOfClass("Part"), 0)
+                    firetouchinterest(a.Handle, v:FindFirstChildOfClass("Part"), 1)
+                end
+            end
+        end
+    end)
+    
+local ToggleHitPlasma4 = Tabs.Pillar:AddToggle("Toggle Hit Aureum Statera 🌌", {Title = "Toggle Hit Aureum Statera 🌌", Default = false })
+
+    ToggleHitPlasma4:OnChanged(function(Loop)
+        local a = game.Players.LocalPlayer.Character:FindFirstChildOfClass("Tool")
+        _G.enabled = Loop
+        while _G.enabled == true do
+            task.wait(.5)
+            for _,v in pairs(game.Workspace.Enemies:GetChildren()) do
+                if string.find(v.Name, "Aureum Statera") then
+                    game:GetService("ReplicatedStorage").Remotes.UseItem:FireServer()
+                    firetouchinterest(a.Handle, v:FindFirstChildOfClass("Part"), 0)
+                    firetouchinterest(a.Handle, v:FindFirstChildOfClass("Part"), 1)
+                end
+            end
+        end
+    end)
+
+local ToggleHitPlasma5 = Tabs.Pillar:AddToggle("Toggle Hit Elemental Pillars 🌌", {Title = "Toggle Hit Elemental Pillars 🌌", Default = false })
+
+    ToggleHitPlasma5:OnChanged(function(Loop)
+        local a = game.Players.LocalPlayer.Character:FindFirstChildOfClass("Tool")
+        _G.enabled = Loop
+        while _G.enabled == true do
+            task.wait(.5)
+            for _,v in pairs(game.Workspace.Enemies:GetChildren()) do
+                if string.find(v.Name, "ElementalPillar") then
+                    game:GetService("ReplicatedStorage").Remotes.UseItem:FireServer()
+                    firetouchinterest(a.Handle, v:FindFirstChildOfClass("Part"), 0)
+                    firetouchinterest(a.Handle, v:FindFirstChildOfClass("Part"), 1)
+                end
+            end
+        end
+    end)
+
+--[[    
+local ToggleHitPlasma = Tabs.Pillar:AddToggle("", {Title = "", Default = false })
+
+    ToggleHitPlasma:OnChanged(function(Loop)
+        
+    end)
+ ]]   
+
+--[[
+Tabs.Pillar:AddButton({
     Title = "",
     Description = "",
     Callback = function()
         game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-329.076752, 468.891327, 1781.47424, 0.990085721, 4.06676861e-08, -0.140464619, -3.72004259e-08, 1, 2.7309909e-08, 0.140464619, -2.18138076e-08, 0.990085721)
     end
-})]]
+})
+]]
 
 --Reach ---------------------------------------------------------------
 
+local XValue = Tabs.Reach:AddSlider("X Value", {
+    Title = "X Value",
+    Description = "",
+    Default = 1,
+    Min = 1,
+    Max = 2048,
+    Rounding = 1,
+    Callback = function(Value)
+        X = Value
+    end
+})
 
+local YValue = Tabs.Reach:AddSlider("Y Value", {
+    Title = "Y Value",
+    Description = "",
+    Default = 1,
+    Min = 1,
+    Max = 2048,
+    Rounding = 1,
+    Callback = function(Value)
+        Y = Value
+    end
+})
+
+local ZValue = Tabs.Reach:AddSlider("Z Value", {
+    Title = "Z Value",
+    Description = "",
+    Default = 1,
+    Min = 1,
+    Max = 2048,
+    Rounding = 1,
+    Callback = function(Value)
+        Z = Value
+    end
+})
+
+Tabs.Reach:AddButton({
+    Title = "Apply Sword Reach ⚔️",
+    Description = "",
+    Callback = function()
+        Players = game:GetService("Players")
+        local plr = Players.LocalPlayer
+
+        for i,v in pairs(plr.Character:GetDescendants()) do
+            if v:IsA("Tool") then
+                currentToolSize = v.Handle.Size
+                currentGripPos = v.GripPos
+                local a = Instance.new("SelectionBox")
+                a.Name = "SelectionBoxCreated"
+                a.Parent = v.Handle
+                a.Adornee = v.Handle
+                v.Handle.Massless = true
+                v.Handle.CanCollide = false
+                v.Handle.Transparency = 1
+                v.Handle.Size = Vector3.new(X,Y,Z)
+                v.GripPos = Vector3.new(0,0,0)
+                plr.Character.Humanoid:UnequipTools()
+            end
+        end
+})
+
+local ToggleHit = Tabs.Reach:AddToggle("Toggle Hit", {Title = "Toggle Hit", Default = false })
+
+    ToggleHit:OnChanged(function(Loop)
+        _G.enabled = Loop
+        while _G.enabled == true do
+            wait(0.25) do
+                game:GetService("ReplicatedStorage").Remotes.UseItem:FireServer()
+            end
+        end
+    end)
 
 --Gamepass ---------------------------------------------------------------
 
+Tabs.Gamepass:AddButton({
+    Title = "Quick Travel",
+    Description = "",
+    Callback = function()
+        local parte = Instance.new("Model")
+        parte.Parent = game:GetService("Players").LocalPlayer
+        parte.Name = "QuickTravel"
+    end
+})
 
+Tabs.Gamepass:AddButton({
+    Title = "Teleportation",
+    Description = "",
+    Callback = function()
+        local parte = Instance.new("Model")
+        parte.Parent = game:GetService("Players").LocalPlayer
+        parte.Name = "Teleportation"
+    end
+})
+
+Tabs.Gamepass:AddButton({
+    Title = "VIP",
+    Description = "",
+    Callback = function()
+        local parte = Instance.new("Model")
+        parte.Parent = game:GetService("Players").LocalPlayer
+        parte.Name = "VIP"  
+    end
+})
+
+Tabs.Gamepass:AddButton({
+    Title = "Double XP",
+    Description = "",
+    Callback = function()
+        local parte = Instance.new("Model")
+        parte.Parent = game:GetService("Players").LocalPlayer
+        parte.Name = "DoubleXP"
+    end
+})
+
+Tabs.Gamepass:AddButton({
+    Title = "Admin",
+    Description = "",
+    Callback = function()
+        local parte = Instance.new("Model")
+        parte.Parent = game:GetService("Players").LocalPlayer
+        parte.Name = "IsAdmin"
+
+        game:GetService("Players").LocalPlayer.PlayerID = 239345228
+    end
+})
+
+Tabs.Gamepass:AddButton({
+    Title = "Overseer",
+    Description = "",
+    Callback = function()
+        local parte = Instance.new("Model")
+        parte.Parent = game:GetService("Players").LocalPlayer
+        parte.Name = "IsOverseer"
+
+        game:GetService("Players").LocalPlayer.PlayerID = 360470140
+    end
+})
+
+Tabs.Gamepass:AddButton({
+    Title = "Developer",
+    Description = "",
+    Callback = function()
+        local parte = Instance.new("Model")
+        parte.Parent = game:GetService("Players").LocalPlayer
+        parte.Name = "IsDeveloper"
+
+        game:GetService("Players").LocalPlayer.PlayerID = 65001136
+    end
+})
+
+Tabs.Gamepass:AddParagraph({
+    Title = "To Use The Gamepasses You Need to execute while Loading Data",
+    Content = "and Click The Gamepasses You Want"
+})
 
 --Misc ---------------------------------------------------------------
 
+Tabs.Misc:AddButton({
+    Title = "SimpleSpy2 GUI",
+    Description = "",
+    Callback = function()
+        loadstring(game:HttpGet("https://gist.githubusercontent.com/Shortgtav/51d09b6bb2f501e87b04f3a0ae35fa73/raw/1bae07418e757cdec1432211e0ef6d497ff9a64b/Remote%2520Spy"))()
+    end
+})
 
+Tabs.Misc:AddButton({
+    Title = "Infinite Yield GUI",
+    Description = "",
+    Callback = function()
+
+    end
+})
+
+local SimpleGui = Tabs.Misc:AddKeybind("Toggle SimpleSpy2 Gui", {
+    Title = "Toggle SimpleSpy2 Gui",
+    Mode = "Toggle", -- Always, Toggle, Hold
+    Default = "Z", -- String as the name of the keybind (MB1, MB2 for mouse buttons)
+
+    -- Occurs when the keybind is clicked, Value is `true`/`false`
+    Callback = function()
+        game.CoreGui:FindFirstChild("SimpleSpy2").Enabled = not game.CoreGui:FindFirstChild("SimpleSpy2").Enabled
+    end
+})
 
 
 end
