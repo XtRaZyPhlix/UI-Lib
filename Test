@@ -193,7 +193,7 @@ local areas = {
 }
 
 -- Mobs Table: Contains the mobs for each area
-local mobs = {
+local areaMobs = {
     ["Lvl 0 Area"] = {"Goblin", "Goblin Leader"},
     ["Lvl 5 Area"] = {"Mummy", "Sandman"},
     ["Lvl 10 Area"] = {"Ice Guardian", "Frostbite Ice Knight"},
@@ -261,52 +261,51 @@ local mobs = {
     ["Secret Bosses"] = {"Scrub", "Dark Skeleton", "The Currupted Bone Lord [FINAL BOSS]", "Light Knight", "Keeper of all Light", "MoonMan", "Spate", "BoldsGold", "The Dark Lord", "I Bone Lord", "Meme", "Ewansiha", "WEE WOO BOSS!!11!", "Hazarmaveth", "Elftronic", "Snowtronic", "Santa 2.0", "Golden Krampus", "Halloween Spirit", "amogus", "Rezokar"}
 }
 
+--------------------------------
 
-local selectedArea = ""  -- Default selected area
-local selectedMob = ""  -- Default mob
-
--- Function to refresh the MobDropdown with the mobs for the selected area
-local function refreshList()
-    if MobDropdown then
-        local mobOptions = mobs[selectedArea]
-        -- Refresh the MobDropdown with new options
-        MobDropdown:SetOptions(mobOptions)
-        selectedMob = mobOptions[1] or ""  -- Set the first mob as the default selected one
-    end
-end
+local selectedArea = "Lvl 0 Area"  -- Default selected area
+local selectedMob = "Goblin"  -- Default mob
 
 -- Create Area Dropdown
 local AreaDropdown = Tabs.MobAreas:AddDropdown("AreaDropdown", {
     Title = "Area",
-    Values = areas,  -- Extract keys from the 'areas' table
+    Values = {"Lvl 0 Area", "Lvl 5 Area", "Lvl 10 Area"},  -- Example areas
     Multi = false,
-    Default = selectedArea,
+    Default = "Select Area",
 })
 
--- Listen for area changes and update the selected area
+-- Listen for area changes and update the selected area and mob dropdown
 AreaDropdown:OnChanged(function(area)
-    selectedArea = area
-    MobDropdown:SetValue(mobs[selectedArea])
+    selectedArea = area  -- Update selected area
+    local mobsForArea = areaMobs[selectedArea]  -- Get mobs for the selected area
+    
+    -- Update MobDropdown values based on selected area
+    MobDropdown:SetValues(mobsForArea)
+    
+    -- Optionally, reset the mob dropdown selection if needed
+    MobDropdown:SetValue(mobsForArea[1])  -- Select the first mob by default
 end)
+
+----------------------------------
 
 -- Create Mob Dropdown
 local MobDropdown = Tabs.MobAreas:AddDropdown("MobDropdown", {
     Title = "Mob Spawns",
-    Values = mobs[selectedArea],  -- Populate with mobs from the selected area
+    Values = areaMobs[selectedArea],  -- Populate with mobs from the selected area
     Multi = true,
     Default = "Select Mob",
-    Callback = function(selectedMob)
-        selectedMob = Values
+    Callback = function(mob)
+        selectedMob = mob  -- Update selected mob
     end
 })
 
--- Listen for mob selection and update the selected mob
-MobDropdown:OnChanged(function(mobName)
-    selectedMob = mobName
-end)
-
+-- Initialize the dropdown with the default area
+AreaDropdown:SetValue(selectedArea)
+MobDropdown:SetValue(selectedMob)
 -- Toggle for Mob Interaction
 local ToggleMob = Tabs.MobAreas:AddToggle("ToggleMob", { Title = "Toggle Mob", Default = false })
+
+------------------------------
 
 ToggleMob:OnChanged(function(Loop)
     local character = game.Players.LocalPlayer.Character
