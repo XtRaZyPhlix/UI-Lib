@@ -17,9 +17,9 @@ local Window = Fluent:CreateWindow({
 local Tabs = {
     Main = Window:AddTab({ Title = "Main", Icon = "box" }),
     MobAreas = Window:AddTab({ Title = "Mob Areas", Icon = "person-standing" }),
-    Pillar = Window:AddTab({ Title = "Elemental Pilars", Icon = "zap" }),
+    Pillar = Window:AddTab({ Title = "Elemental Pilars", Icon = "brackets" }),
     Reach = Window:AddTab({ Title = "Reach", Icon = "swords" }),
-    Gamepass = Window:AddTab({ Title = "Gamepass", Icon = "badge" }),
+    Gamepass = Window:AddTab({ Title = "Gamepass", Icon = "badge-dollar-sign" }),
     Misc = Window:AddTab({ Title = "Misc", Icon = "hexagon" }),
     Settings = Window:AddTab({ Title = "Settings", Icon = "settings" })
 }
