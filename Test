@@ -278,14 +278,12 @@ local MobDropdown = Tabs.MobAreas:AddDropdown("MobDropdown", {
     Values = areaMobs[selectedArea],  -- Populate with mobs from the selected area
     Multi = true,
     Default = "Select Mob",
-    Callback = function(mob)
-        selectedMob = mob  -- Update selected mob
-    end
 })
 
--- Initialize the dropdown with the default area
-AreaDropdown:SetValue(selectedArea)
-MobDropdown:SetValue(selectedMob)
+-- Listen for mob selection and update the selected mob
+MobDropdown:OnChanged(function(mobName)
+    selectedMob = mobName
+end)
 
 -- Toggle for Mob Interaction
 local ToggleMob = Tabs.MobAreas:AddToggle("ToggleMob", { Title = "Toggle Mob", Default = false })
