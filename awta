@@ -5,7 +5,7 @@ local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.
 -- Create Window
 local Window = Fluent:CreateWindow({
     Title = "Test",
-    SubTitle = "by #####22",
+    SubTitle = "by #####",
     TabWidth = 160,
     Size = UDim2.fromOffset(580, 460),
     Acrylic = true,  -- Enable blur effect (set to false to disable blur)
@@ -17,9 +17,9 @@ local Window = Fluent:CreateWindow({
 local Tabs = {
     Main = Window:AddTab({ Title = "Main", Icon = "box" }),
     MobAreas = Window:AddTab({ Title = "Mob Areas", Icon = "person-standing" }),
-    Pillar = Window:AddTab({ Title = "Elemental Pilars", Icon = "brackets" }),
+    Pillar = Window:AddTab({ Title = "Pilars", Icon = "clipboard-check" }),
     Reach = Window:AddTab({ Title = "Reach", Icon = "swords" }),
-    Gamepass = Window:AddTab({ Title = "Gamepass", Icon = "badge-dollar-sign" }),
+    Gamepass = Window:AddTab({ Title = "Gamepass", Icon = "award" }),
     Misc = Window:AddTab({ Title = "Misc", Icon = "hexagon" }),
     Settings = Window:AddTab({ Title = "Settings", Icon = "settings" })
 }
@@ -72,7 +72,7 @@ do
                     if enemyRootPart then
                         -- Anchor and move mob if conditions met
                         enemyRootPart.Anchored = true
-                        enemyRootPart.CFrame = humanoidRootPart.CFrame * CFrame.new(1, 3, -5)
+                        enemyRootPart.CFrame = humanoidRootPart.CFrame * CFrame.new(1, 3, -3)
                     end
                 end
             end
@@ -251,7 +251,7 @@ local areaMobs = {
 --------------------------------
 
 local selectedArea = "Lvl 0 Area"  -- Default selected area
-local selectedMob = ""  -- Default mob
+local selectedMob2 = ""  -- Default mob
 
 -- Create Area Dropdown
 local AreaDropdown = Tabs.MobAreas:AddDropdown("AreaDropdown", {
@@ -271,7 +271,7 @@ local MobDropdown = Tabs.MobAreas:AddDropdown("MobDropdown", {
 
 -- Listen for mob selection and update the selected mob
 MobDropdown:OnChanged(function(mobName)
-    selectedMob = mobName  -- Update selected mob
+    selectedMob2 = mobName  -- Update selected mob
 end)
 
 -- Listen for area changes and update the selected area and mob dropdown
@@ -284,11 +284,11 @@ AreaDropdown:OnChanged(function(area)
 end)
 
 -- Toggle for Mob Interaction
-local ToggleMob = Tabs.MobAreas:AddToggle("ToggleMob", { Title = "Toggle Mob", Default = false })
+local ToggleMob2 = Tabs.MobAreas:AddToggle("ToggleMob", { Title = "Toggle Mob", Default = false })
 
 ------------------------------
 
-ToggleMob:OnChanged(function(Loop)
+ToggleMob2:OnChanged(function(Loop)
     local character = game.Players.LocalPlayer.Character
 
     -- Ensure character exists and is valid
@@ -303,20 +303,447 @@ ToggleMob:OnChanged(function(Loop)
 
         -- Loop through enemies and find matching mobs
         for _, enemy in pairs(game.Workspace.Enemies:GetChildren()) do
-            if string.find(enemy.Name, selectedMob) then
+            if string.find(enemy.Name, selectedMob2) then
                 local enemyRootPart = enemy:FindFirstChild("HumanoidRootPart")
                 if enemyRootPart then
                     -- Anchor and move mob if conditions met
                     enemyRootPart.Anchored = true
-                    enemyRootPart.CFrame = humanoidRootPart.CFrame * CFrame.new(1, 3, -5)
+                    enemyRootPart.CFrame = humanoidRootPart.CFrame * CFrame.new(1, 3, -3)
                 end
             end
         end
     end
 end)
 
+-- Toggle for Mob Hit Interaction
+local ToggleMobHit2 = Tabs.MobAreas:AddToggle("Toggle Mob Hit", { Title = "Toggle Mob Hit", Default = false })
+
+ToggleMobHit2:OnChanged(function(Loop)
+    _G.enabled = Loop
+    while _G.enabled do
+        task.wait(0.25)
+
+        -- Ensure args is a valid table
+        if type(args) ~= "table" then
+            args = {}  -- Default to an empty table if args is invalid
+        end
+
+        -- Fire the remote only if it's a valid table
+        local remotes = game:GetService("ReplicatedStorage").Remotes
+        if remotes and remotes:FindFirstChild("UseItem") then
+            remotes.UseItem:FireServer(unpack(args))  -- Fire remote with unpacked args
+        end
+    end
+end)
+
+-- Toggle for Mob Kill Interaction
+local ToggleMobKill2 = Tabs.MobAreas:AddToggle("Toggle Mob Kill", { Title = "Toggle Mob Kill", Default = false })
+
+ToggleMobKill2:OnChanged(function(Loop)
+    _G.on = Loop
+    while _G.on do
+        task.wait(0.8)
+
+        local character = player.Character
+        local tool = character and character:FindFirstChildOfClass("Tool")
+        if not tool then continue end  -- Skip iteration if no tool is found
+
+        for _, enemy in pairs(game.Workspace.Enemies:GetChildren()) do
+            if string.find(enemy.Name, selectedMob2) then
+                -- Ensure args is defined and is a table
+                if type(args) ~= "table" then
+                    args = {}  -- Default to an empty table if args is invalid
+                end
+
+                -- Fire the remote only if it's a valid table
+                local remotes = game:GetService("ReplicatedStorage").Remotes
+                if remotes and remotes:FindFirstChild("UseItem") then
+                    remotes.UseItem:FireServer(unpack(args))  -- Fire remote with unpacked args
+                end
+
+                local part = enemy:FindFirstChildOfClass("Part")
+                if part then
+                    -- Simulate touching the enemy
+                    firetouchinterest(tool.Handle, part, 0)
+                    firetouchinterest(tool.Handle, part, 1)
+                end
+            end
+        end
+    end
+end)
+
+--Pillar ---------------------------------------------------------------
+
+-- Helper Function to Handle Toggle Logic
+local function handleToggle(toggle, targetName, onChangedCallback)
+    toggle:OnChanged(function(isEnabled)
+        _G.isActive = isEnabled
+        while _G.isActive do
+            task.wait(0.25)
+            for _, v in pairs(game.Workspace.Enemies:GetChildren()) do
+                if string.find(v.Name, targetName) then
+                    onChangedCallback(v)
+                end
+            end
+        end
+    end)
 end
---Addons ---------------------------------------------------------------
+
+-- Helper Function to Set CFrame for Enemies
+local function setEnemyCFrame(enemy, targetPosition)
+    local humanoidRootPart = enemy:FindFirstChild("HumanoidRootPart")
+    if humanoidRootPart then
+        humanoidRootPart.Anchored = true
+        humanoidRootPart.CFrame = targetPosition
+    end
+end
+
+-- Helper Function for Attacking
+local function attackEnemy(tool, enemy)
+    if enemy and tool then
+        local part = enemy:FindFirstChildOfClass("Part")
+        if part then
+            game:GetService("ReplicatedStorage").Remotes.UseItem:FireServer()
+            firetouchinterest(tool.Handle, part, 0)
+            firetouchinterest(tool.Handle, part, 1)
+        end
+    end
+end
+
+-- Lightning Elemental
+Tabs.Pillar:AddButton({
+    Title = "Tp to Titan Fulmen ⚡",
+    Callback = function()
+        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-329.076752, 468.891327, 1781.47424)
+    end
+})
+
+-- Ice Elemental
+Tabs.Pillar:AddParagraph({
+    Title = "Ice Elemental ❄️",
+    Content = ""
+})
+
+local ToggleTpIce = Tabs.Pillar:AddToggle("Toggle Titan Glacies ❄️", { Title = "Toggle Titan Glacies ❄️", Default = false })
+handleToggle(ToggleTpIce, "Titan Glacies", function(v)
+    setEnemyCFrame(v, game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame * CFrame.new(1, 3, -5))
+end)
+
+local ToggleHitIce = Tabs.Pillar:AddToggle("Toggle Hit Titan Glacies ❄️", { Title = "Toggle Hit Titan Glacies ❄️", Default = false })
+ToggleHitIce:OnChanged(function(Loop)
+    local tool = game.Players.LocalPlayer.Character:FindFirstChildOfClass("Tool")
+    _G.enabled = Loop
+    while _G.enabled do
+        task.wait(0.25)
+        for _, v in pairs(game.Workspace.Enemies:GetChildren()) do
+            if string.find(v.Name, "Titan Glacies") then
+                attackEnemy(tool, v)
+            end
+        end
+    end
+end)
+
+-- Fire Elemental
+Tabs.Pillar:AddParagraph({
+    Title = "Fire Elemental 🔥",
+    Content = ""
+})
+
+local ToggleHitFire = Tabs.Pillar:AddToggle("Auto Attack 🔥 (Wait 5-7 Seconds)", { Title = "Auto Attack 🔥 (Wait 5-7 Seconds)", Default = false })
+ToggleHitFire:OnChanged(function(Loop)
+    local tool = game.Players.LocalPlayer.Character:FindFirstChildOfClass("Tool")
+    _G.attack = Loop
+    while _G.attack do
+        task.wait(0.25)
+        for _, v in pairs(game.Workspace.Enemies:GetChildren()) do
+            if v:FindFirstChild("Human") then
+                attackEnemy(tool, v)
+            end
+        end
+    end
+end)
+
+-- Water Elemental
+Tabs.Pillar:AddParagraph({
+    Title = "Water Elemental 💧",
+    Content = ""
+})
+
+local ToggleWater = Tabs.Pillar:AddToggle("Toggle Water Orbs 💧", {Title = "Toggle Water Orbs 💧", Default = false})
+
+ToggleWater:OnChanged(function(Loop)
+    local WaterOrbs = game:GetService("Workspace"):FindFirstChild("WaterOrbs")
+    
+    if not WaterOrbs then
+        -- If there are no water orbs, exit the function
+        return
+    end
+
+    local Orb = WaterOrbs:FindFirstChild("Orb")
+    if not Orb then
+        -- If no Orb exists under WaterOrbs, exit the function
+        return
+    end
+
+    local Chara = game.Players.LocalPlayer.Character
+    local basepart = Chara:FindFirstChildWhichIsA("BasePart")
+    if not basepart then
+        -- If the character's base part isn't found, exit the function
+        return
+    end
+
+    local Count = 0
+    _G.Orbs = Loop
+
+    while _G.Orbs do
+        -- Only proceed if the orb is valid
+        if Orb and basepart then
+            repeat
+                wait(0.25)
+                firetouchinterest(Orb, basepart, 0)
+                firetouchinterest(Orb, basepart, 1)
+                Count = Count + 1
+            until Count == 20
+        end
+    end
+end)
+
+
+-- Ensure helper function is defined correctly
+local function toggleMobHit(mobDropdown, toggleButton, mobType)
+    local chosenMob
+    mobDropdown:OnChanged(function(Values)
+        chosenMob = Values
+    end)
+
+    toggleButton:OnChanged(function(Loop)
+        local tool = game.Players.LocalPlayer.Character:FindFirstChildOfClass("Tool")
+        if not tool then
+            return -- Exit if the tool is not found
+        end
+        _G.enabled = Loop
+        while _G.enabled do
+            task.wait(0.25)
+            for _, enemy in pairs(game.Workspace.Enemies:GetChildren()) do
+                if string.find(enemy.Name, chosenMob) then
+                    game:GetService("ReplicatedStorage").Remotes.UseItem:FireServer()
+                    local part = enemy:FindFirstChildOfClass("Part")
+                    if part then
+                        firetouchinterest(tool.Handle, part, 0)
+                        firetouchinterest(tool.Handle, part, 1)
+                    end
+                end
+            end
+        end
+    end)
+end
+
+-- Solar Elemental Section
+Tabs.Pillar:AddParagraph({
+    Title = "Solar Elemental 🪐",
+    Content = ""
+})
+
+-- Create Mob Dropdown for Solar Elemental (Solis/Flare)
+local ChooseMob1 = Tabs.Pillar:AddDropdown("Choose Mob 🪐", {
+    Title = "Mob Spawns",
+    Values = {"Titan Solis", "Flare"},  -- Default mobs based on the selected area
+    Multi = true,
+    Default = {"Select Mob"},
+})
+
+-- Create Toggle for Solis/Flare hit logic
+local ToggleFire = Tabs.Pillar:AddToggle("Toggle Solis/Flare 🪐", { Title = "Toggle Solis/Flare 🪐", Default = false })
+toggleMobHit(ChooseMob1, ToggleFire, "Solis/Flare")
+
+Tabs.Pillar:AddButton({
+    Title = "Tp to Flares 🪐",
+    Callback = function()
+        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(895.248596, 321.131317, 2392.60742, 0.99999994, -6.26771246e-10, -0.000354468561, 5.76313275e-10, 1, -1.4234827e-07, 0.000354468561, 1.42348057e-07, 0.99999994)
+    end
+})
+
+-- Plasma Elemental Section
+Tabs.Pillar:AddParagraph({
+    Title = "Plasma Elemental 🌌",
+    Content = ""
+})
+
+Tabs.Pillar:AddButton({
+    Title = "Tp to Mother of Chaos 🌌",
+    Callback = function()
+        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-6199.5874, 106.824211, -40.1784744, -0.0218606181, -1.14025532e-07, 0.999761045, -5.28366968e-08, 1, 1.12897467e-07, -0.999761045, -5.03560642e-08, -0.0218606181)
+    end
+})
+
+-- Create Mob Dropdown for Plasma Elemental (Mother of Chaos, Aureum Statera, ElementalPillar)
+local ChooseMob2 = Tabs.Pillar:AddDropdown("Choose Mob 🌌", {
+    Title = "Choose Mob",
+    Values = {"Mother of Chaos", "Aureum Statera", "ElementalPillar"},
+    Multi = true,
+    Default = {"Select Mob"},
+})
+
+-- Create Toggle for Plasma Elemental hit logic
+local ToggleHitPlasma = Tabs.Pillar:AddToggle("Toggle Hit Titan 🌌", { Title = "Toggle Hit Titan 🌌", Default = false })
+toggleMobHit(ChooseMob2, ToggleHitPlasma, "Mother of Chaos/Aureum Statera/ElementalPillar")
+
+
+
+-- Reach ---------------------------------------------------------------
+
+local XValue = Tabs.Reach:AddSlider("X Value", {
+    Title = "X Value",
+    Description = "",
+    Default = 1,
+    Min = 1,
+    Max = 2048,
+    Rounding = 1,
+    Callback = function(Value)
+        X = Value
+    end
+})
+
+local YValue = Tabs.Reach:AddSlider("Y Value", {
+    Title = "Y Value",
+    Description = "",
+    Default = 1,
+    Min = 1,
+    Max = 2048,
+    Rounding = 1,
+    Callback = function(Value)
+        Y = Value
+    end
+})
+
+local ZValue = Tabs.Reach:AddSlider("Z Value", {
+    Title = "Z Value",
+    Description = "",
+    Default = 1,
+    Min = 1,
+    Max = 2048,
+    Rounding = 1,
+    Callback = function(Value)
+        Z = Value
+    end
+})
+
+Tabs.Reach:AddButton({
+    Title = "Apply Sword Reach ⚔️",
+    Description = "",
+    Callback = function()
+        local player = game:GetService("Players").LocalPlayer
+        for _, tool in pairs(player.Character:GetDescendants()) do
+            if tool:IsA("Tool") and tool.Handle then
+                -- Store current values before modification
+                local currentToolSize = tool.Handle.Size
+                local currentGripPos = tool.GripPos
+
+                -- Create SelectionBox
+                local selectionBox = Instance.new("SelectionBox")
+                selectionBox.Name = "SelectionBoxCreated"
+                selectionBox.Parent = tool.Handle
+                selectionBox.Adornee = tool.Handle
+
+                -- Apply new tool settings
+                tool.Handle.Massless = true
+                tool.Handle.CanCollide = false
+                tool.Handle.Transparency = 1
+                tool.Handle.Size = Vector3.new(X, Y, Z)
+                tool.GripPos = Vector3.new(0, 0, 0)
+
+                -- Unequip tools
+                player.Character.Humanoid:UnequipTools()
+            end
+        end
+    end
+})
+
+-- Toggle Hit -----------------------------------------------------------
+
+local ToggleHit = Tabs.Reach:AddToggle("Toggle Hit", {Title = "Toggle Hit", Default = false})
+
+ToggleHit:OnChanged(function(Loop)
+    _G.enabled = Loop
+    while _G.enabled do
+        wait(0.25)
+        -- Safely check if the remotes exist before firing
+        local remote = game:GetService("ReplicatedStorage"):FindFirstChild("Remotes")
+        if remote and remote:FindFirstChild("UseItem") then
+            remote.UseItem:FireServer()
+        end
+    end
+end)
+
+-- Gamepass Buttons ----------------------------------------------------
+
+local function createGamepassButton(name, id)
+    Tabs.Gamepass:AddButton({
+        Title = name,
+        Description = "",
+        Callback = function()
+            local model = Instance.new("Model")
+            model.Parent = game:GetService("Players").LocalPlayer
+            model.Name = name
+
+            -- Assign the player ID for special roles
+            if id then
+                game:GetService("Players").LocalPlayer.PlayerID = id
+            end
+        end
+    })
+end
+
+-- Create Gamepass buttons
+createGamepassButton("QuickTravel")
+createGamepassButton("Teleportation")
+createGamepassButton("VIP")
+createGamepassButton("Double XP")
+createGamepassButton("Admin", 239345228)
+createGamepassButton("Overseer", 360470140)
+createGamepassButton("Developer", 65001136)
+
+-- Information Paragraph ------------------------------------------------
+
+Tabs.Gamepass:AddParagraph({
+    Title = "To Use The Gamepasses You Need to execute while Loading Data",
+    Content = "and Click The Gamepasses You Want"
+})
+
+
+--Misc ---------------------------------------------------------------
+
+Tabs.Misc:AddButton({
+    Title = "SimpleSpy2 GUI",
+    Description = "",
+    Callback = function()
+        loadstring(game:HttpGet("https://gist.githubusercontent.com/Shortgtav/51d09b6bb2f501e87b04f3a0ae35fa73/raw/1bae07418e757cdec1432211e0ef6d497ff9a64b/Remote%2520Spy"))()
+    end
+})
+
+Tabs.Misc:AddButton({
+    Title = "Infinite Yield GUI",
+    Description = "",
+    Callback = function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source"))()
+    end
+})
+
+local SimpleGui = Tabs.Misc:AddKeybind("Toggle SimpleSpy2 Gui", {
+    Title = "Toggle SimpleSpy2 Gui",
+    Mode = "Toggle",
+    Default = "Z",
+    Callback = function()
+        local spyGui = game.CoreGui:FindFirstChild("SimpleSpy2")
+        if spyGui then
+            spyGui.Enabled = not spyGui.Enabled
+        end
+    end
+})
+
+
+end
+--Settings ---------------------------------------------------------------
 
 -- Addons:
 -- SaveManager (Allows you to have a configuration system)
