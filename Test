@@ -5,7 +5,7 @@ local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.
 -- Create Window
 local Window = Fluent:CreateWindow({
     Title = "Test",
-    SubTitle = "by #####222",
+    SubTitle = "by #####",
     TabWidth = 160,
     Size = UDim2.fromOffset(580, 460),
     Acrylic = true,  -- Enable blur effect (set to false to disable blur)
@@ -282,10 +282,6 @@ AreaDropdown:OnChanged(function(area)
     -- Update MobDropdown values based on selected area
     MobDropdown:SetValues(mobsForArea)
 end)
-
--- Initialize the dropdown with the default area and mob
-AreaDropdown:SetValue(selectedArea)
-MobDropdown:SetValue(areaMobs[selectedArea][1])
 
 -- Toggle for Mob Interaction
 local ToggleMob = Tabs.MobAreas:AddToggle("ToggleMob", { Title = "Toggle Mob", Default = false })
