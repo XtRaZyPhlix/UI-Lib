@@ -5,7 +5,7 @@ local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.
 -- Create Window
 local Window = Fluent:CreateWindow({
     Title = "Test",
-    SubTitle = "by #####dn",
+    SubTitle = "by #####daddddasdsan",
     TabWidth = 160,
     Size = UDim2.fromOffset(580, 460),
     Acrylic = true,  -- Enable blur effect (set to false to disable blur)
@@ -311,7 +311,7 @@ ToggleMob2:OnChanged(function(Loop)
         for _, enemy in pairs(game.Workspace.Enemies:GetChildren()) do
             for _, selectedMob in pairs(selectedMobs) do
                 -- Ensure selectedMob is a string before passing it to string.find
-                if type(selectedMob) == "string" and string.find(enemy.Name, selectedMob) then
+                if type(selectedMob) == "string" and string.find(enemy.Name, (selectedMob)) then
                     local enemyRootPart = enemy:FindFirstChild("HumanoidRootPart")
                     if enemyRootPart then
                         -- Anchor and move mob if conditions met
