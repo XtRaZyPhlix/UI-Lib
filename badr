@@ -306,7 +306,7 @@ ToggleMob2:OnChanged(function(Loop)
         for _, enemy in pairs(game.Workspace.Enemies:GetChildren()) do
             -- Check if the enemy's name matches any of the selected mobs
             for _, selectedMob in pairs(selectedMobs) do
-                if string.find(enemy.Name, selectedMob) then
+                if string.find(enemy.Name, (selectedMob)) then
                     local enemyRootPart = enemy:FindFirstChild("HumanoidRootPart")
                     if enemyRootPart then
                         -- Anchor and move mob if conditions met
