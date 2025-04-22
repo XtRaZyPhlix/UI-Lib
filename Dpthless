@@ -112,7 +112,7 @@ do
             local tool = character and character:FindFirstChildOfClass("Tool")
             if not tool then continue end  -- Skip iteration if no tool is found
 
-            for _, enemy in pairs(game.Workspace.Enemies:GetChildren()) do
+            for _, enemy in pairs(game.Workspace.Mobs:GetChildren()) do
                 if string.find(enemy.Name, mob) then
                     -- Ensure args is defined and is a table
                     if type(args) ~= "table" then
@@ -140,7 +140,7 @@ do
 
 --Misc ---------------------------------------------------------------
 
-local ToggleHeal = Tabs.Misc:AddToggle("Auto Heal", {Title = "Auto Heal", Default = false})
+--[[local ToggleHeal = Tabs.Misc:AddToggle("Auto Heal", {Title = "Auto Heal", Default = false})
 
 ToggleHeal:OnChanged(function(Loop)
     --Variables
@@ -156,7 +156,7 @@ ToggleHeal:OnChanged(function(Loop)
             firetouchinterest(Heal,basepart,1)
         end)
     end
-end)
+end)]]
 
 Tabs.Misc:AddButton({
     Title = "SimpleSpy2 GUI",
