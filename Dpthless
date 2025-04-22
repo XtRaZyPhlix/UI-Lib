@@ -1,0 +1,228 @@
+local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
+local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
+local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/InterfaceManager.lua"))()
+
+-- Create Window
+local Window = Fluent:CreateWindow({
+    Title = "Test",
+    SubTitle = "by #####dn",
+    TabWidth = 160,
+    Size = UDim2.fromOffset(580, 460),
+    Acrylic = true,  -- Enable blur effect (set to false to disable blur)
+    Theme = "Dark",  -- Set the theme to "Dark" or any other available theme
+    MinimizeKey = Enum.KeyCode.LeftControl  -- Keybind for minimizing
+})
+
+-- Add Tabs
+local Tabs = {
+    Main = Window:AddTab({ Title = "Main", Icon = "box" }),
+    MobAreas = Window:AddTab({ Title = "Mob Areas", Icon = "person-standing" }),
+    Pillar = Window:AddTab({ Title = "Pilars", Icon = "clipboard-check" }),
+    Reach = Window:AddTab({ Title = "Reach", Icon = "swords" }),
+    Gamepass = Window:AddTab({ Title = "Gamepass", Icon = "award" }),
+    Misc = Window:AddTab({ Title = "Misc", Icon = "hexagon" }),
+    Settings = Window:AddTab({ Title = "Settings", Icon = "settings" })
+}
+
+-- Variables for Mob Selection
+local mob = ""
+local args = {}  -- Ensure args is defined globally for all uses
+local player = game.Players.LocalPlayer
+
+-- Mob Selection Section
+do
+    Tabs.Main:AddParagraph({
+        Title = "Mob Selection",
+        Content = "Type Mob Name"
+    })
+
+    -- Mob Name Input
+    local MobName = Tabs.Main:AddInput("Mob Name", {
+        Title = "Mob Name",
+        Default = "",
+        Placeholder = "Mob Name",
+        Numeric = false,
+        Finished = false,
+        Callback = function(input)
+            mob = input
+        end
+    })
+
+    -- Toggle for Mob Interaction
+    local ToggleMob = Tabs.Main:AddToggle("Toggle Mob", { Title = "Toggle Mob", Default = false })
+
+    ToggleMob:OnChanged(function(Loop)
+        local character = player.Character
+
+        -- Ensure character exists
+        if not character then return end
+
+        local humanoidRootPart = character:FindFirstChild("HumanoidRootPart")
+        if not humanoidRootPart then return end
+
+        _G.on = Loop
+
+        while _G.on do
+            task.wait(0.8)
+
+            -- Loop through enemies and find matching mobs
+            for _, enemy in pairs(game.Workspace.Mobs:GetChildren()) do
+                if string.find(enemy.Name, mob) then
+                    local enemyRootPart = enemy:FindFirstChild("HumanoidRootPart")
+                    if enemyRootPart then
+                        -- Anchor and move mob if conditions met
+                        enemyRootPart.Anchored = true
+                        enemyRootPart.CFrame = humanoidRootPart.CFrame * CFrame.new(1, 3, -3)
+                    end
+                end
+            end
+        end
+    end)
+
+    -- Toggle for Mob Hit Interaction
+    local ToggleMobHit = Tabs.Main:AddToggle("Toggle Mob Hit", { Title = "Toggle Mob Hit", Default = false })
+
+    ToggleMobHit:OnChanged(function(Loop)
+        _G.enabled = Loop
+        while _G.enabled do
+            task.wait(0.25)
+
+            -- Ensure args is a valid table
+            if type(args) ~= "table" then
+                args = {}  -- Default to an empty table if args is invalid
+            end
+
+            -- Fire the remote only if it's a valid table
+            local remotes = game:GetService("ReplicatedStorage").Remotes
+            if remotes and remotes:FindFirstChild("UseItem") then
+                remotes.UseItem:FireServer(unpack(args))  -- Fire remote with unpacked args
+            end
+        end
+    end)
+
+    -- Toggle for Mob Kill Interaction
+    local ToggleMobKill = Tabs.Main:AddToggle("Toggle Mob Kill", { Title = "Toggle Mob Kill", Default = false })
+
+    ToggleMobKill:OnChanged(function(Loop)
+        _G.on = Loop
+        while _G.on do
+            task.wait(0.8)
+
+            local character = player.Character
+            local tool = character and character:FindFirstChildOfClass("Tool")
+            if not tool then continue end  -- Skip iteration if no tool is found
+
+            for _, enemy in pairs(game.Workspace.Enemies:GetChildren()) do
+                if string.find(enemy.Name, mob) then
+                    -- Ensure args is defined and is a table
+                    if type(args) ~= "table" then
+                        args = {}  -- Default to an empty table if args is invalid
+                    end
+
+                    -- Fire the remote only if it's a valid table
+                    local remotes = game:GetService("ReplicatedStorage").Remotes
+                    if remotes and remotes:FindFirstChild("UseItem") then
+                        remotes.UseItem:FireServer(unpack(args))  -- Fire remote with unpacked args
+                    end
+
+                    local part = enemy:FindFirstChildOfClass("Part")
+                    if part then
+                        -- Simulate touching the enemy
+                        firetouchinterest(tool.Handle, part, 0)
+                        firetouchinterest(tool.Handle, part, 1)
+                    end
+                end
+            end
+        end
+    end)
+
+    
+
+--Misc ---------------------------------------------------------------
+
+local ToggleHeal = Tabs.Misc:AddToggle("Auto Heal", {Title = "Auto Heal", Default = false})
+
+ToggleHeal:OnChanged(function(Loop)
+    --Variables
+    Heal = game:GetService("Workspace").Parts.Decoration["Healing Pond"].Pad
+    Chara = Game.Players.LocalPlayer.Character
+    basepart = Chara:FindFirstChildWhichIsA("BasePart")
+    --Script
+    getgenv().Heal = Loop
+    while getgenv().Heal == true do task.wait()
+        pcall(function() --Because I am lazy and don't wanna spend time optimizing
+            firetouchinterest(Heal,basepart,0) --This heals you
+            task.wait(.2)
+            firetouchinterest(Heal,basepart,1)
+        end)
+    end
+end)
+
+Tabs.Misc:AddButton({
+    Title = "SimpleSpy2 GUI",
+    Description = "",
+    Callback = function()
+        loadstring(game:HttpGet("https://gist.githubusercontent.com/Shortgtav/51d09b6bb2f501e87b04f3a0ae35fa73/raw/1bae07418e757cdec1432211e0ef6d497ff9a64b/Remote%2520Spy"))()
+    end
+})
+
+Tabs.Misc:AddButton({
+    Title = "Infinite Yield GUI",
+    Description = "",
+    Callback = function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source"))()
+    end
+})
+
+local SimpleGui = Tabs.Misc:AddKeybind("Toggle SimpleSpy2 Gui", {
+    Title = "Toggle SimpleSpy2 Gui",
+    Mode = "Toggle",
+    Default = "Z",
+    Callback = function()
+        local spyGui = game.CoreGui:FindFirstChild("SimpleSpy2")
+        if spyGui then
+            spyGui.Enabled = not spyGui.Enabled
+        end
+    end
+})
+
+
+end
+--Settings ---------------------------------------------------------------
+
+-- Addons:
+-- SaveManager (Allows you to have a configuration system)
+-- InterfaceManager (Allows you to have a interface managment system)
+
+-- Hand the library over to our managers
+SaveManager:SetLibrary(Fluent)
+InterfaceManager:SetLibrary(Fluent)
+
+-- Ignore keys that are used by ThemeManager.
+-- (we dont want configs to save themes, do we?)
+SaveManager:IgnoreThemeSettings()
+
+-- You can add indexes of elements the save manager should ignore
+SaveManager:SetIgnoreIndexes({})
+
+-- use case for doing it this way:
+-- a script hub could have themes in a global folder
+-- and game configs in a separate folder per game
+InterfaceManager:SetFolder("FluentScriptHub")
+SaveManager:SetFolder("FluentScriptHub/specific-game")
+
+InterfaceManager:BuildInterfaceSection(Tabs.Settings)
+SaveManager:BuildConfigSection(Tabs.Settings)
+
+
+Window:SelectTab(1)
+
+Fluent:Notify({
+    Title = "Fluent",
+    Content = "The script has been loaded.",
+    Duration = 8
+})
+
+-- You can use the SaveManager:LoadAutoloadConfig() to load a config
+-- which has been marked to be one that auto loads!
+SaveManager:LoadAutoloadConfig()
